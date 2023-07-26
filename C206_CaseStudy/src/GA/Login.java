@@ -12,65 +12,54 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
-public class Login extends Application {
+public class Login {
 
-	private VBox vbPane = new VBox();
-	private HBox hbPane = new HBox();
+	private static VBox vbPane = new VBox();
+	private static HBox hbPane = new HBox();
 	
+	private static Label lbLogin1 = new Label("Login to Account");
+	private static Label lbLogin2 = new Label("Please enter you details to login");
 	
+	private static Label lbEmail = new Label("Enter email: ");
+	private static Label lbPassword = new Label("Enter password: ");
 	
-	private Label lbAppTitleWelcome = new Label("Welcome to the GA App!");
-	private Label lbAppTitleAsk = new Label("Please login to start");
+	private static TextField tfEmail = new TextField();
+	private static TextField tfPassword = new TextField();
 	
+	private static Button btCreate = new Button("Login");
 	
-	private Button btLogin = new Button("Login");
-	private Button btRegister = new Button("Register");
-
-	
-	public static void main(String[] args) {
-		launch(args);
-	}
-	
-	public void start(Stage primaryStage) {
-		String jdbcURL = "jdbc:mysql://localhost/demodb";
-		String dbUsername = "root";
-		String dbPassword = "";
-		
-		DBUtil.init(jdbcURL, dbUsername, dbPassword);
-		
+	public static Scene LoginAccount() {
 		hbPane.setSpacing(10);
-		hbPane.setAlignment(Pos.CENTER);
+		hbPane.setAlignment(Pos.BASELINE_CENTER);
+
 		
-		// RJ
 		String style = "-fx-background-color: blue; -fx-text-fill: white;";
-		btLogin.setStyle(style);
-		btRegister.setStyle(style);
-		
-		hbPane.getChildren().addAll(btLogin, btRegister);
+		btCreate.setStyle(style);
+		lbLogin1.setStyle("-fx-font: 20 arial;");
+
 		
 		vbPane.setSpacing(10);
 		vbPane.setPadding(new Insets(10,10,10,10));
-		vbPane.setAlignment(Pos.CENTER);
+		vbPane.setAlignment(Pos.BASELINE_CENTER);
+		vbPane.getChildren().addAll(
+				lbLogin1, lbLogin2,
+				lbEmail, tfEmail,
+				lbPassword, tfPassword,
+				btCreate, hbPane);
 		
-		// RJ
-		lbAppTitleWelcome.setStyle("-fx-font: 20 arial;");
-		vbPane.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk, hbPane);
+		int MaxWidthTF = 200;
+		tfEmail.setMaxWidth(MaxWidthTF);
+		tfPassword.setMaxWidth(MaxWidthTF);
+		Scene login = new Scene(vbPane);
 		
-		Scene mainScene = new Scene(vbPane);
-		primaryStage.setScene(mainScene);
 		
-		primaryStage.setTitle("GA login/registion page");
-		primaryStage.setWidth(600);
-		primaryStage.setHeight(400);
-		
-		primaryStage.show();
-		
-
+		return login;
 	}
 
 }

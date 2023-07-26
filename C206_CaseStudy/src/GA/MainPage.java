@@ -53,8 +53,7 @@ public class MainPage extends Application {
 		hbPane.setSpacing(10);
 		hbPane.setAlignment(Pos.CENTER);
 
-		//hbPane.setStyle("-fx-background-color: blue;");
-		// RJ
+
 		String style = "-fx-background-color: blue; -fx-text-fill: white;";
 		btLogin.setStyle(style);
 		btRegister.setStyle(style);
@@ -62,10 +61,8 @@ public class MainPage extends Application {
 		hbPane.getChildren().addAll(btLogin, btRegister);
 
 		vbPane.setSpacing(10);
-		vbPane.setPadding(new Insets(10, 10, 10, 10));
 		vbPane.setAlignment(Pos.BASELINE_CENTER);
 
-		// RJ
 		lbAppTitleWelcome.setStyle("-fx-font: 20 arial;");
 		vbPane.getChildren().addAll(NavBar.navBarStart(),lbAppTitleWelcome, lbAppTitleAsk, hbPane);
 
@@ -77,7 +74,9 @@ public class MainPage extends Application {
 		
 		loadStage(title,600,400);
 
-		EventHandler<ActionEvent> handleLogin = (ActionEvent e) -> (new Login()).start(new Stage());
+		EventHandler<ActionEvent> handleLogin = (ActionEvent e) -> {
+			MainLogin();
+		};
 		btLogin.setOnAction(handleLogin);
 
 		EventHandler<ActionEvent> handleRegister = (ActionEvent e) -> {
@@ -96,7 +95,21 @@ public class MainPage extends Application {
 		
 		String title = "GA Registion Page";
 		
-		// Load Stage of Registration using the 
+		// Load Stage of Registration using the globalStage
+		loadStage(title);
+	}
+	
+	private void MainLogin() {
+		
+		// Calls Login class to get scene in LoginAccount
+		Scene newScene = Login.LoginAccount();
+		
+		// Set scene in newScene
+		globalStage.setScene(newScene);
+		
+		String title = "GA Login Page";
+		
+		// Load Stage of login using the globalStage
 		loadStage(title);
 	}
 }
