@@ -1,6 +1,5 @@
 package GA;
 
-
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,14 +17,6 @@ import javafx.stage.Stage;
  */
 public class MainPage extends Application {
 
-	private VBox vbPane = new VBox();
-	private HBox hbPane = new HBox();
-
-	private Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
-	private Label lbAppTitleAsk = new Label("Please login/register to start");
-
-	private Button btLogin = new Button("Login");
-	private Button btRegister = new Button("Register");
 	private Stage globalStage = new Stage();
 
 	public static void main(String[] args) {
@@ -47,14 +38,23 @@ public class MainPage extends Application {
 	private void loadStage(String title) {
 		loadStage(title, 600, 500);
 	}
-	
-	private void StartPage() {
 
+	private void StartPage() {
+		VBox vbPane = new VBox();
+		HBox hbPane = new HBox();
+
+		Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
+		Label lbAppTitleAsk = new Label("Please login/register to start");
+
+		Button btLogin = new Button("Login");
+		Button btRegister = new Button("Register");
+
+		String style = "-fx-background-color: blue; -fx-text-fill: white;";
+		String title = "GA login/registion page";
+		
 		hbPane.setSpacing(10);
 		hbPane.setAlignment(Pos.CENTER);
 
-
-		String style = "-fx-background-color: blue; -fx-text-fill: white;";
 		btLogin.setStyle(style);
 		btRegister.setStyle(style);
 
@@ -64,15 +64,12 @@ public class MainPage extends Application {
 		vbPane.setAlignment(Pos.BASELINE_CENTER);
 
 		lbAppTitleWelcome.setStyle("-fx-font: 20 arial;");
-		vbPane.getChildren().addAll(NavBar.navBarStart(),lbAppTitleWelcome, lbAppTitleAsk, hbPane);
+		vbPane.getChildren().addAll(NavBar.navBarStart(), lbAppTitleWelcome, lbAppTitleAsk, hbPane);
 
 		Scene mainScene = new Scene(vbPane);
-		
-		globalStage.setScene(mainScene);
 
-		String title = "GA login/registion page";
-		
-		loadStage(title,600,400);
+		globalStage.setScene(mainScene);
+		loadStage(title, 600, 400);
 
 		EventHandler<ActionEvent> handleLogin = (ActionEvent e) -> {
 			MainLogin();
@@ -84,21 +81,21 @@ public class MainPage extends Application {
 		};
 		btRegister.setOnAction(handleRegister);
 	}
-	
+
 	private void MainRegister() {
-		
+
 		// Calls Registration class to get scene in RegisterAccout
 		Scene newScene = Registration.RegisterAccount();
-		
+
 		// Set scene in newScene
 		globalStage.setScene(newScene);
-		
+
 		String title = "GA Registion Page";
-		
+
 		// Load Stage of Registration using the globalStage
 		loadStage(title);
 	}
-	
+
 	private void MainLogin() {
 		
 		// Calls Login class to get scene in LoginAccount
