@@ -40,8 +40,9 @@ public class MainPage extends Application {
 	}
 
 	private void StartPage() {
-		VBox vbPane = new VBox();
-		HBox hbPane = new HBox();
+		HBox vbPaneEntire = new HBox();
+		VBox vbPaneMain = new VBox();
+		HBox hbPaneBt = new HBox();
 
 		Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
 		Label lbAppTitleAsk = new Label("Please login/register to start");
@@ -52,22 +53,24 @@ public class MainPage extends Application {
 		String style = "-fx-background-color: blue; -fx-text-fill: white;";
 		String title = "GA login/registion page";
 		
-		hbPane.setSpacing(10);
-		hbPane.setAlignment(Pos.CENTER);
+		hbPaneBt.setSpacing(10);
+		hbPaneBt.setAlignment(Pos.CENTER);
 
 		btLogin.setStyle(style);
 		btRegister.setStyle(style);
 
-		hbPane.getChildren().addAll(btLogin, btRegister);
+		hbPaneBt.getChildren().addAll(btLogin, btRegister);
 
-		vbPane.setSpacing(10);
-		vbPane.setAlignment(Pos.BASELINE_CENTER);
+		vbPaneMain.setSpacing(10);
+		vbPaneMain.setAlignment(Pos.CENTER);
 
 		lbAppTitleWelcome.setStyle("-fx-font: 20 arial;");
-		vbPane.getChildren().addAll(NavBar.navBarStart(), lbAppTitleWelcome, lbAppTitleAsk, hbPane);
-
-		Scene mainScene = new Scene(vbPane);
-
+		vbPaneMain.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk, hbPaneBt);
+		
+		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(), vbPaneMain);
+		//vbPaneEntire.setAlignment(Pos.CENTER);
+		Scene mainScene = new Scene(vbPaneEntire);
+		
 		globalStage.setScene(mainScene);
 		loadStage(title, 600, 400);
 

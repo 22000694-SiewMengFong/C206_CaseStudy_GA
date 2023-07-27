@@ -1,6 +1,7 @@
 package GA;
 
 import javafx.geometry.Orientation;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToolBar;
@@ -12,7 +13,7 @@ import javafx.scene.layout.HBox;
 public class NavBar{
 
 	
-	public static ToolBar navBarStart() {
+	public static HBox navBarStart() {
 		// create a label
 		ToolBar toolbar = new ToolBar();
 
@@ -24,11 +25,13 @@ public class NavBar{
 
 		toolbar.getItems().addAll(btMainPage, btLogin, btRegister, btAboutSus);
 
-		//toolbar.setOrientation(Orientation.VERTICAL);
-		//HBox hbox = new HBox(toolbar);
-		//return hbox
-
-		return toolbar;
+		toolbar.setOrientation(Orientation.VERTICAL);
+		HBox hbox = new HBox(toolbar);
+		hbox.setAlignment(Pos.TOP_LEFT);
+		return hbox;
+		
+		
+		//return toolbar;
 	}
 
 }
