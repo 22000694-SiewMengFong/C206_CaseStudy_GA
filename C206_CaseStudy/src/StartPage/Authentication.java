@@ -2,6 +2,9 @@ package StartPage;
 
 import HelperPackage.DBUtil;
 
+//TODO fix select statement error
+//TODO change boolean of LoginAccount to string where it returns the user_access type
+
 public class Authentication {
 
 	// NOTE: URL may be different depending on the name of the database
@@ -17,13 +20,13 @@ public class Authentication {
 	 * @param password
 	 * @return
 	 */
-	public static boolean CreateAccount(String name, String email, String password) {
+	protected static String CreateAccount(String name, String email, String password) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 
 		// ERROR: SQL execute not running in java
 		// FIXED: password can be retrieve by hashing user password to compare
 		
-		boolean check = false;
+		String check = null;
 
 		// Check if email exist in db
 		if (CheckEmailDB(email) == false) {
@@ -41,7 +44,7 @@ public class Authentication {
 
 			// Validate if insert is 1
 			if (rowsAffected == 1) {
-				check = true;
+				check = "normal";
 			}
 		}
 
@@ -57,7 +60,7 @@ public class Authentication {
 	 * @param password
 	 * @return
 	 */
-	public static boolean LoginAccount(String email, String password) {
+	protected static boolean LoginAccount(String email, String password) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 
 		boolean check = false;
@@ -69,7 +72,6 @@ public class Authentication {
 		// Create and format SQL select Statement
 		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('" + password
 				+ "');";
-		System.out.println(jdbcURL);
 
 		int rowsAffected = DBUtil.execSQL(select);
 

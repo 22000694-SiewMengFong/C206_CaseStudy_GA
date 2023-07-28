@@ -14,7 +14,6 @@ import javafx.stage.Stage;
 
 public class NavBar {
 
-	@SuppressWarnings("exports")
 	public static HBox navBarStart(Stage primaryStage) {
 		// create a label
 		ToolBar toolbar = new ToolBar();

@@ -16,6 +16,9 @@ import java.util.regex.Pattern;
 import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 
+
+//TODO Link Registration to HomePage NormalUser (NOT YET)
+
 public class Registration extends Application {
 
 	// Create Box by Entire screen, Main screen, button area
@@ -103,8 +106,9 @@ public class Registration extends Application {
 				String email = tfEmail.getText();
 				String password = tfPassword1.getText();
 
-				// To display label text back to user
-				if (Authentication.CreateAccount(name, email, password) == true) {
+				// Check if access is create by checking if it is empty
+				String access_type = Authentication.CreateAccount(name, email, password);
+				if (access_type.isEmpty()) {
 					lbRepsonse.setStyle(responseGood);
 					lbRepsonse.setText("Account Creation Successful");
 				}
