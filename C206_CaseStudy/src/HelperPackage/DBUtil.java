@@ -1,4 +1,4 @@
-package GA;
+package HelperPackage;
 
 
 import java.sql.Connection;

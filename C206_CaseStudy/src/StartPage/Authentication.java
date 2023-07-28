@@ -8,7 +8,7 @@ import GA.Helper;
 
 public class Authentication {
 
-	public static boolean CreateAccount() {
+	public static boolean CreateAccount(String name, String email, String password) {
 		// TODO Check if account is already in sql by email. Using CheckDB
 		// TODO prevent SQL Injection
 
@@ -33,6 +33,7 @@ public class Authentication {
 			}
 		}
 		return false;
+
 	}
 
 	public static boolean LoginAccount(String email, String password) {

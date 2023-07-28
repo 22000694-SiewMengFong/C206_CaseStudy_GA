@@ -1,4 +1,4 @@
-package StartPage;
+package HelperPackage;
 
 import javafx.scene.Scene;
 import javafx.stage.Stage;
