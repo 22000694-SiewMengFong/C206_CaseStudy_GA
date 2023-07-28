@@ -1,102 +1,122 @@
 package StartPage;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
-import GA.DBUtil;
-import GA.Helper;
+import HelperPackage.DBUtil;
 
 public class Authentication {
 
-	public static boolean CreateAccount(String name, String email, String password) {
-		// TODO Check if account is already in sql by email. Using CheckDB
-		// TODO prevent SQL Injection
+	// NOTE: URL may be different depending on the name of the database
+	private static String jdbcURL = "jdbc:mysql://localhost/c206_ga";
+	private static String dbUsername = "root";
+	private static String dbPassword = "";
 
-		// ERROR: SQL insert does not work - Invalid field name for password - 
-		//SQL database is in hexadecimal while input is String - Not Match - DM Darrel for screenshot
-		// for screenshot
-		String email = Helper.readString("Enter your email > ");
-		email = SQLInjection(email);
-		if (!CheckDB(email)) {
-			String name = Helper.readString("Enter your user name > ");
+	/**
+	 * Method CreateAccount
+	 * 
+	 * @param name
+	 * @param email
+	 * @param password
+	 * @return
+	 */
+	public static boolean CreateAccount(String name, String email, String password) {
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+
+		// ERROR: SQL execute not running in java
+		// FIXED: password can be retrieve by hashing user password to compare
+		
+		boolean check = false;
+
+		// Check if email exist in db
+		if (CheckEmailDB(email) == false) {
+
+			// Prevent SQL injection
+			email = SQLInjection(email);
 			name = SQLInjection(name);
-			String password = Helper.readString("Enter your password > ");
 			password = SQLInjection(password);
 
-			String insert = "INSERT INTO user(user_name, user_email, user_password) " + "VALUES ('" + name + "' , '"
-					+ email + "', " + password + ")";
+			// Create and format SQL insert Statement
+			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture) VALUES ('" + name
+					+ "' , '" + email + "', SHA1('"+ password +"'), NULL );";
+
 			int rowsAffected = DBUtil.execSQL(insert);
-			// validate
+
+			// Validate if insert is 1
 			if (rowsAffected == 1) {
-				System.out.println("Account Created!");
-				return true;
+				check = true;
 			}
 		}
-		return false;
 
-	}
+		DBUtil.close();
+		return check;
 
+	} // End of CreateAccount
+
+	/**
+	 * Method LoginAccount
+	 * 
+	 * @param email
+	 * @param password
+	 * @return
+	 */
 	public static boolean LoginAccount(String email, String password) {
-		// TODO Check if account email and password is correct
-		// TODO prevent SQL Injection by email and password
-		// check email:
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 
-		// NOTE: URL may be different depending on the name of the database
-		// ERROR: Password Not able to be matched - SQL database is in hexadecimal while input is String - Not Match
+		boolean check = false;
+
+		// Prevent SQL Injection
 		email = SQLInjection(email);
 		password = SQLInjection(password);
 
-		String jdbcURL = "jdbc:mysql://localhost/c206_ga";
-		String dbUsername = "root";
-		String dbPassword = "";
-		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		// Create and format SQL select Statement
+		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('" + password
+				+ "');";
+		System.out.println(jdbcURL);
 
-		String sql = "SELECT * FROM user";
-		ResultSet rs = DBUtil.getTable(sql);
+		int rowsAffected = DBUtil.execSQL(select);
 
-		try {
-			while (rs.next()) {
-				String sqlEmail = rs.getString("user_email");
-				String sqlPass = rs.getString("user_password");
-				if (sqlEmail.equals(email) && sqlPass.equals(password)) {
-					return true;
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		// Validate if select is 1
+		if (rowsAffected == 1) {
+			check = true;
 		}
-		return false;
-	}
 
-	private static String SQLInjection(String x) {
-		// TODO Prevent SQL injection of string
-		x.replace("'", "''");
-		return x;
-	}
+		DBUtil.close();
+		return check;
+	} // End of LoginAccount
 
-	private static boolean CheckDB(String email) {
-		// TODO Looks at DB and check if email is found
+	/**
+	 * Prevent SQL injection of string by double quoting single quotes
+	 * 
+	 * @param str
+	 * @return formated SQL string
+	 */
+	private static String SQLInjection(String str) {
+		str.replace("'", "''");
+		return str;
+	} // End of SQLInjection
 
-		// NOTE: URL may be different depending on the name of the database
-		String jdbcURL = "jdbc:mysql://localhost/c206_ga";
-		String dbUsername = "root";
-		String dbPassword = "";
+	/**
+	 * Method CheckEmailDB check if email is used inside db
+	 * 
+	 * @param email
+	 * @return true if email is found
+	 */
+	private static boolean CheckEmailDB(String email) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		email = SQLInjection(email);
 
-		String sql = "SELECT * FROM user";
-		ResultSet rs = DBUtil.getTable(sql);
-		try {
-			while (rs.next()) {
-				String sqlEmail = rs.getString("user_email");
-				if (sqlEmail.equals(email)) {
-					return true;
-				}
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		boolean check = false;
+
+		// Create and format SQL select Statement
+		String select = "SELECT * FROM user WHERE user_email = '"+ email +"';";
+
+		int rowsAffected = DBUtil.execSQL(select);
+
+		// Check if select is more than or equals to 1
+		if (rowsAffected >= 1) {
+			check = true;
 		}
-		return false;
-	}
-}
+
+		DBUtil.close();
+		return check;
+	} // End of CheckEmailDB
+
+} // End of Class

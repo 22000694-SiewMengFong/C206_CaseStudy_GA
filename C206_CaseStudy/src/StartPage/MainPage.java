@@ -12,7 +12,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-
 public class MainPage extends Application {
 
 	// Create Box by Entire screen, Main screen, button area
@@ -28,13 +27,14 @@ public class MainPage extends Application {
 	private Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
 	private Label lbAppTitleAsk = new Label("Please login/register to start");
 
-	// Style of button and title of window
-	private String style = "-fx-background-color: blue; -fx-text-fill: white;";
+	// Basic setting of the class
+	private String stylebt = "-fx-background-color: blue; -fx-text-fill: white;";
+	private String stylelb = "-fx-font: 20 arial;";
 	private String title = "GA login/registion page";
 
 	public static void main(String[] args) {
 		launch(args);
-	}
+	} // End of Main
 
 	@SuppressWarnings("exports")
 	public void start(Stage primaryStage) {
@@ -42,9 +42,10 @@ public class MainPage extends Application {
 		// Design of button area
 		hbPaneBt.setSpacing(10);
 		hbPaneBt.setAlignment(Pos.CENTER);
-
-		btLogin.setStyle(style);
-		btRegister.setStyle(style);
+		
+		// Set style of buttons
+		btLogin.setStyle(stylebt);
+		btRegister.setStyle(stylebt);
 
 		hbPaneBt.getChildren().addAll(btLogin, btRegister);
 
@@ -52,7 +53,7 @@ public class MainPage extends Application {
 		vbPaneMain.setSpacing(10);
 		vbPaneMain.setAlignment(Pos.CENTER);
 
-		lbAppTitleWelcome.setStyle("-fx-font: 20 arial;");
+		lbAppTitleWelcome.setStyle(stylelb);
 		vbPaneMain.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk, hbPaneBt);
 
 		// Add Nav bar followed by main screen
@@ -61,10 +62,11 @@ public class MainPage extends Application {
 		Scene mainScene = new Scene(vbPaneEntire);
 
 		// Initialize stage
-		FXHelper.loadStage(primaryStage,mainScene, title, 600, 400);
+		FXHelper.loadStage(primaryStage, mainScene, title, 600, 400);
 
 		// Add event for Login button
 		EventHandler<ActionEvent> handleLogin = (ActionEvent e) -> {
+			
 			// Try open login window else mainpage
 			try {
 				(new Login()).start(new Stage());
@@ -78,12 +80,12 @@ public class MainPage extends Application {
 
 		// Add event for Register button
 		EventHandler<ActionEvent> handleRegister = (ActionEvent e) -> {
+			
 			// Try open register window else mainpage
 			try {
 				(new Registration()).start(new Stage());
 				primaryStage.close();
-			}
-			catch (Exception ex) {
+			} catch (Exception ex) {
 				(new MainPage()).start(new Stage());
 				primaryStage.close();
 			}
@@ -91,6 +93,6 @@ public class MainPage extends Application {
 		};
 		btRegister.setOnAction(handleRegister);
 
-	}
+	} // End of Start
 
-}
+} // End of Class

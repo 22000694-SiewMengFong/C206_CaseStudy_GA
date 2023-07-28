@@ -17,193 +17,220 @@ import HelperPackage.FXHelper;
 
 public class Registration extends Application {
 
-    // Create Box by Entire screen, Main screen, button area
-    private HBox vbPaneEntire = new HBox();
-    private VBox vbPaneMain = new VBox();
-    private HBox hbPane = new HBox();
-    //Create label display to be displayed on top of GUI
-    private Label lbRegister1 = new Label("Register an Account");
-    private Label lbRegister2 = new Label("Please enter your details to start"); // Corrected "you" to "your"
-    //Create respective label to ask user for input data
-    private Label lbName = new Label("Enter name: ");
-    private Label lbEmail = new Label("Enter email: ");
-    private Label lbPassword1 = new Label("Enter password: ");
-    private Label lbPassword2 = new Label("Confirm password: ");
-    //Create label to be displayed back to user based on certain conditions
-    private Label lbRepsonse = new Label(""); // Corrected "Repsonse" to "Response"
-    //Create respective textbox to collect user input data
-    private TextField tfName = new TextField();
-    private TextField tfEmail = new TextField();
-    private TextField tfPassword1 = new TextField();
-    private TextField tfPassword2 = new TextField();
-    //Create button to be clicked by user upon filling all textfield
-    private Button btCreate = new Button("Create Account");
-    //Create title of the GUI and the style of background
-    private String title = "Registration Window";
-    private String style = "-fx-background-color: blue; -fx-text-fill: white;";
-    private String responseError = "-fx-text-fill: red;";
-    private String responseGood = "-fx-text-fill: green;";
-    private int MaxWidthTF = 200;
+	// Create Box by Entire screen, Main screen, button area
+	private HBox vbPaneEntire = new HBox();
+	private VBox vbPaneMain = new VBox();
+	private HBox hbPane = new HBox();
 
-    public static void main(String[] args) {
-        launch(args);
-    }
-    //Design of screen displayed
-    @SuppressWarnings("exports")
-    public void start(Stage primaryStage) {
-        // Setting up the horizontal box for button area
-        hbPane.setSpacing(10);
-        hbPane.setAlignment(Pos.BASELINE_CENTER);
-        
-        // Styling the "Create Account" button
-        btCreate.setStyle(style);
-        // Styling the "Register an Account" label
-        lbRegister1.setStyle("-fx-font: 20 arial;");
+	// Create label display to be displayed on top of GUI
+	private Label lbRegister1 = new Label("Register an Account");
+	private Label lbRegister2 = new Label("Please enter your details to start");
 
-        // Setting up the vertical box for the main content area
-        vbPaneMain.setSpacing(10);
-        vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
-        vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
+	// Create respective label to ask user for input data
+	private Label lbName = new Label("Enter name: ");
+	private Label lbEmail = new Label("Enter email: ");
+	private Label lbPassword1 = new Label("Enter password: ");
+	private Label lbPassword2 = new Label("Confirm password: ");
 
-        // Adding all the necessary elements to the main content area
-        vbPaneMain.getChildren().addAll(
-            lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail,
-            lbPassword1, tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse
-        );
+	// Create label to be displayed back to user based on certain conditions
+	private static Label lbRepsonse = new Label("");
 
-        // Setting the maximum width for the text fields
-        tfName.setMaxWidth(MaxWidthTF);
-        tfEmail.setMaxWidth(MaxWidthTF);
-        tfPassword1.setMaxWidth(MaxWidthTF);
-        tfPassword2.setMaxWidth(MaxWidthTF);
-        
-        // Adding the main content area and navigation bar to the entire horizontal box
-        vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
-        Scene register = new Scene(vbPaneEntire);
-        //Initialize stage
-        FXHelper.loadStage(primaryStage, register, title, 500, 500);
-        //Add event for response 
-        EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
-        	//To occur when boolean returned from EventHandler is true
-            if (checkFields() == true) {
-                // David
-                // TODO SQL add in authenticate class
-                // Inputs are collected and are stored within respective strings
-                String name = tfName.getText();
-                String email = tfEmail.getText();
-                String password = tfPassword1.getText();
+	// Create respective textbox to collect user input data
+	private static TextField tfName = new TextField();
+	private static TextField tfEmail = new TextField();
+	private static TextField tfPassword1 = new TextField();
+	private static TextField tfPassword2 = new TextField();
 
-                // CreateAccount method within the Authentication class is called and the strings
-                // To display label text back to user
-                if (Authentication.CreateAccount(name, email, password)) {
-                    lbRepsonse.setStyle(responseGood);
-                    lbRepsonse.setText("Account Creation Successful");
-                }
-            }
+	// Create button to be clicked by user upon filling all textfield
+	private Button btCreate = new Button("Create Account");
 
-        };
-        btCreate.setOnAction(handleResponse);
+	// Basic setting of the class
+	private String title = "Registration Window";
+	private String stylebt = "-fx-background-color: blue; -fx-text-fill: white;";
+	private String stylelb = "-fx-font: 20 arial;";
+	private static String responseError = "-fx-text-fill: red;";
+	private String responseGood = "-fx-text-fill: green;";
+	private int MaxWidthTF = 200;
 
-    }
-    //Return boolean value based on whether user input data is valid
-    private boolean checkFields() {
-        lbRepsonse.setStyle(responseError);
-        //Retrieve input data from textfield
-        String name = tfName.getText();
-        String email = tfEmail.getText();
-        String password1 = tfPassword1.getText();
-        String password2 = tfPassword2.getText();
+	public static void main(String[] args) {
+		launch(args);
+	} // End of Main
 
-        // Confirm mandatory fields are filled out
-        if (name.isEmpty()) {
-            lbRepsonse.setText("The field cannot be left blank. You must enter in a name");
-            return false;
-        }
+	@SuppressWarnings("exports")
+	public void start(Stage primaryStage) {
+		// Setting up the horizontal box for button area
+		hbPane.setSpacing(10);
+		hbPane.setAlignment(Pos.BASELINE_CENTER);
 
-        if (email.isEmpty()) {
-            lbRepsonse.setText("The field cannot be left blank. You must enter in an email");
-            return false;
-        }
+		// Styling the "Create Account" button
+		btCreate.setStyle(stylebt);
 
-        if (password1.isEmpty()) {
-            lbRepsonse.setText("The field cannot be left blank. You must enter in a password");
-            return false;
-        }
+		// Styling the "Register an Account" label
+		lbRegister1.setStyle(stylelb);
 
-        if (password2.isEmpty()) {
-            lbRepsonse.setText("The field cannot be left blank. You must enter in a password");
-            return false;
-        }
+		// Setting up the vertical box for the main content area
+		vbPaneMain.setSpacing(10);
+		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
+		vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
 
-        if (!password1.equals(password2)) {
-            lbRepsonse.setText("Password entered must be the same.");
-            return false;
-        }
-        // David
-        // TODO Name is all in alpha
-        // Method isAllAlpha is called below
-        if (!isName(name)) {
-            lbRepsonse.setText("Name must contain only alphabetic characters.");
-            return false;
-        }
+		// Adding all the necessary elements to the main content area
+		vbPaneMain.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPassword1,
+				tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse);
 
-        // TODO Email is right format
-        // Method isValidEmail is called below
-        if (!isEmail(email)) {
-            lbRepsonse.setText("Invalid email format. Please enter a valid email address.");
-            return false;
-        }
+		// Setting the maximum width for the text fields
+		tfName.setMaxWidth(MaxWidthTF);
+		tfEmail.setMaxWidth(MaxWidthTF);
+		tfPassword1.setMaxWidth(MaxWidthTF);
+		tfPassword2.setMaxWidth(MaxWidthTF);
 
-        // Checked
-        // TODO Password is strong (OPTIONAL) - regex
-        if (!isPassword(password1)) {
-            lbRepsonse.setText("Password must include at least one capital letter and be at least 8 characters long.");
-            return false;
-        }
-        return true;
-    }
+		// Adding the main content area and navigation bar to the entire horizontal box
+		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
 
-    /**
-     * Method is about validating name by checking if name is all in alphabetical
-     * 
-     * @param name
-     * @return true if name matches
-     */
-    private static boolean isName(String name) {
+		Scene register = new Scene(vbPaneEntire);
 
-        // Match name using RegEx
-        String pattern = "[a-zA-Z]+";
+		// Initialize stage
+		FXHelper.loadStage(primaryStage, register, title, 500, 500);
 
-        boolean matched = Pattern.matches(pattern, name);
-        return matched;
-    }
+		// Add event for response
+		EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
 
-    /**
-     * Method is about validating email by checking if email contains @ and .
-     * 
-     * @param email
-     * @return true if email matches
-     */
-    private static boolean isEmail(String email) {
+			// Check if user input is valid
+			if (checkFields() == true) {
 
-        String pattern = "[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+";
+				// Inputs are collected and are stored within respective strings
+				String name = tfName.getText();
+				String email = tfEmail.getText();
+				String password = tfPassword1.getText();
 
-        boolean matched = Pattern.matches(pattern, email);
-        return matched;
-    }
+				// To display label text back to user
+				if (Authentication.CreateAccount(name, email, password) == true) {
+					lbRepsonse.setStyle(responseGood);
+					lbRepsonse.setText("Account Creation Successful");
+				}
+			}
 
-    /**
-     * Method is about validating the password strength using regex.
-     * 
-     * @param password
-     * @return true if password is strong (at least one capital letter and at least 8 characters long)
-     */
-    private static boolean isPassword(String password) {
+		};
+		btCreate.setOnAction(handleResponse);
 
-        String pattern = "^(?=.*[A-Z]).{8,}$";
+	} // End of Start
 
-        boolean matched = Pattern.matches(pattern, password);
-        return matched;
-    }
+	/**
+	 * Method return boolean value based on whether user input data is valid
+	 * 
+	 * @return true if all fields are valid
+	 */
+	private static boolean checkFields() {
+
+		lbRepsonse.setStyle(responseError);
+		boolean check = false;
+
+		// Retrieve input data from textfield
+		String name = tfName.getText();
+		String email = tfEmail.getText();
+		String password1 = tfPassword1.getText();
+		String password2 = tfPassword2.getText();
+
+		// Confirm mandatory fields are filled out
+		if (name.isEmpty() && email.isEmpty() && password1.isEmpty() && password2.isEmpty()) {
+			check = ResponseReturn("All field cannot be left blank.");
+		}
+
+		else if (name.isEmpty()) {
+			check = ResponseReturn("The field Name cannot be left blank. You must enter in a name");
+		}
+
+		else if (email.isEmpty()) {
+			check = ResponseReturn("The field Email cannot be left blank. You must enter in an email");
+		}
+
+		else if (password1.isEmpty()) {
+			check = ResponseReturn("The field Password cannot be left blank. You must enter in a password");
+		}
+
+		else if (password2.isEmpty()) {
+			check = ResponseReturn("The field Confirm Password cannot be left blank. You must enter in a password");
+		}
+
+		else if (password1.equals(password2) == false) {
+			check = ResponseReturn("Password entered must be the same.");
+		}
+
+		else if (isName(name) == false) {
+			check = ResponseReturn("Name must contain only alphabetic characters.");
+		}
+
+		else if (isEmail(email) == false) {
+			check = ResponseReturn("Invalid email format. Please enter a valid email address.");
+		}
+
+		else if (isPassword(password1) == false) {
+			check = ResponseReturn(
+					"Password must include at least one capital letter and be at least 8 characters long.");
+		} 
+		
+		else {
+			ResponseReturn("");
+			check = true;
+		}
+
+		return check;
+	} // End of CheckFields
+
+	/**
+	 * Method set text of lbResponse by response
+	 * 
+	 * @param response
+	 * @return false by default
+	 */
+	private static boolean ResponseReturn(String response) {
+		lbRepsonse.setText(response);
+		return false;
+	} // End of ResponseReturn
+
+	/**
+	 * Method is about validating name by checking if name is all in alphabetical
+	 * 
+	 * @param name
+	 * @return true if name matches
+	 */
+	private static boolean isName(String name) {
+
+		// Match name using RegEx
+		String pattern = "[a-zA-Z]+";
+
+		boolean matched = Pattern.matches(pattern, name);
+		return matched;
+	} // End of isName
+
+	/**
+	 * Method is about validating email by checking if email contains @ and .
+	 * 
+	 * @param email
+	 * @return true if email matches
+	 */
+	private static boolean isEmail(String email) {
+
+		// Match email using RegEx
+		String pattern = "[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+";
+
+		boolean matched = Pattern.matches(pattern, email);
+		return matched;
+	} // End of isEmail
+
+	/**
+	 * Method is about validating the password strength using regex.
+	 * 
+	 * @param password
+	 * @return true if password is strong (at least one capital letter and at least
+	 *         8 characters long)
+	 */
+	private static boolean isPassword(String password) {
+
+		// Match password using RegEx
+		String pattern = "^(?=.*[A-Z]).{8,}$";
+
+		boolean matched = Pattern.matches(pattern, password);
+		return matched;
+	} // End of isPassword
 
 }

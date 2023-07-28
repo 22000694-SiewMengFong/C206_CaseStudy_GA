@@ -9,7 +9,6 @@ import javafx.scene.control.ToolBar;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-
 public class NavBar {
 
 	@SuppressWarnings("exports")
@@ -29,7 +28,7 @@ public class NavBar {
 		HBox hbox = new HBox(toolbar);
 		hbox.setAlignment(Pos.TOP_LEFT);
 
-		// Add event for main page  button
+		// Add event for main page button
 		EventHandler<ActionEvent> handleMainPage = (ActionEvent e) -> {
 			(new MainPage()).start(new Stage());
 			primaryStage.close();
@@ -61,12 +60,12 @@ public class NavBar {
 			}
 		};
 		btRegister.setOnAction(handleRegister);
-		
+
 		// Add event for about us button
 		EventHandler<ActionEvent> handleAboutUs = (ActionEvent e) -> {
 			// Try open about us window else mainpage
 			try {
-				//(new AboutUs()).start(new Stage());
+				// (new AboutUs()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
 				(new MainPage()).start(new Stage());
