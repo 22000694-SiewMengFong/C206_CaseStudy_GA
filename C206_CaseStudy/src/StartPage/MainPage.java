@@ -1,6 +1,7 @@
 package StartPage;
 
 import HelperPackage.FXHelper;
+import HelperPackage.NavBar;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

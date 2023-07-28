@@ -1,5 +1,8 @@
-package StartPage;
+package HelperPackage;
 
+import StartPage.Login;
+import StartPage.MainPage;
+import StartPage.Registration;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;

@@ -14,6 +14,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.regex.Pattern;
 import HelperPackage.FXHelper;
+import HelperPackage.NavBar;
 
 public class Registration extends Application {
 
