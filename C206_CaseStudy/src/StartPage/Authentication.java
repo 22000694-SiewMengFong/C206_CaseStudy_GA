@@ -108,7 +108,7 @@ public class Authentication {
 		boolean check = false;
 
 		// Create and format SQL select Statement
-		String select = "SELECT * FROM user WHERE user_email = '"+ email +"';";
+		String select = "SELECT * FROM `user` WHERE `user_email` = '"+ email +"';";
 
 		int rowsAffected = DBUtil.execSQL(select);
 
