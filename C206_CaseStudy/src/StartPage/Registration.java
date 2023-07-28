@@ -13,6 +13,19 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
 public class Registration extends Application {
 
 	// Create Box by Entire screen, Main screen, button area
@@ -74,9 +87,14 @@ public class Registration extends Application {
 
 		EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
 			if(checkFields()) {
+				//David
 				//TODO SQL add in authenticate class
-				
-				if (Authentication.CreateAccount()) {
+				//Inputs are collected and is stored within respective strings
+				String name = tfName.getText();
+                String email = tfEmail.getText();
+                String password = tfPassword1.getText();
+                //CreateAccount method within Authentication class is called and strings created earlier are used as arguments
+				if (Authentication.CreateAccount(name,email,password)) {
 					lbRepsonse.setStyle(responseGood);
 					lbRepsonse.setText("Account Creation Successful");
 				}
@@ -114,11 +132,39 @@ public class Registration extends Application {
 			lbRepsonse.setText("Password entered must be the same.");
 			return false;
 		}
-
+		//David 
 		//TODO Name is all in alpha
+		//Method isAllAlpha is called below
+		 if (!isAllAlpha(tfName.getText())) {
+	            lbRepsonse.setText("Name must contain only alphabetic characters.");
+	            return false;
+	        }
 		//TODO Email is right format
+		 //Method isValidEmail is called below
+		 if (!isValidEmail(tfEmail.getText())) {
+	            lbRepsonse.setText("Invalid email format. Please enter a valid email address.");
+	            return false;
+	        }
 		//TODO Password is strong (OPTIONAL) - regex
+		 if (!tfPassword1.getText().matches("^(?=.*[A-Z]).{8,}$")) {
+			    lbRepsonse.setText("Password must include at least one capital letter and be at least 8 characters long.");
+			    return false;}
 		return true;
+	}
+	
+	//Method used for name format,loops through the string thoroughly and return false if none alphabet is detected
+	private boolean isAllAlpha(String str) {
+	    for (char c : str.toCharArray()) {
+	        if (!Character.isLetter(c)) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
+	//Method used for email format, will return true if all conditions under checker are met
+	private boolean isValidEmail(String email) {
+		boolean checker=email.contains("@") && email.contains(".") && email.indexOf("@") < email.lastIndexOf(".");
+	    return checker;
 	}
 
 }
