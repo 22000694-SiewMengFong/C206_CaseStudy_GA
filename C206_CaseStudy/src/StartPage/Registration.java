@@ -21,7 +21,7 @@ public class Registration extends Application {
     private HBox vbPaneEntire = new HBox();
     private VBox vbPaneMain = new VBox();
     private HBox hbPane = new HBox();
-    //Create title display to be displayed on top
+    //Create label display to be displayed on top of GUI
     private Label lbRegister1 = new Label("Register an Account");
     private Label lbRegister2 = new Label("Please enter your details to start"); // Corrected "you" to "your"
     //Create respective label to ask user for input data
@@ -29,7 +29,7 @@ public class Registration extends Application {
     private Label lbEmail = new Label("Enter email: ");
     private Label lbPassword1 = new Label("Enter password: ");
     private Label lbPassword2 = new Label("Confirm password: ");
-    //Create label to be displayed back to user
+    //Create label to be displayed back to user based on certain conditions
     private Label lbRepsonse = new Label(""); // Corrected "Repsonse" to "Response"
     //Create respective textbox to collect user input data
     private TextField tfName = new TextField();
@@ -54,7 +54,7 @@ public class Registration extends Application {
         // Setting up the horizontal box for button area
         hbPane.setSpacing(10);
         hbPane.setAlignment(Pos.BASELINE_CENTER);
-
+        
         // Styling the "Create Account" button
         btCreate.setStyle(style);
         // Styling the "Register an Account" label
