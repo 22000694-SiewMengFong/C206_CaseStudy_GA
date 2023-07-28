@@ -76,11 +76,18 @@ public class Authentication {
 		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('"
 				+ password + "');";
 
-		int rowsAffected = DBUtil.execSQL(select);
-
-		// Validate if select is 1
-		if (rowsAffected == 1) {
-			check = true;
+		ResultSet rs = DBUtil.getTable(select);
+		// Check if Email exist and that the password match
+		try {
+			if (rs != null) {
+				while (rs.next()) {
+					check = true;
+					return check;
+				}
+			} 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		DBUtil.close();
