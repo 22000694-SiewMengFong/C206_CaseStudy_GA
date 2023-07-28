@@ -34,8 +34,8 @@ public class Authentication {
 			password = SQLInjection(password);
 
 			// Create and format SQL insert Statement
-			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture) VALUES ('" + name
-					+ "' , '" + email + "', SHA1('"+ password +"'), NULL );";
+			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access) VALUES ('" + name
+					+ "' , '" + email + "', SHA1('"+ password +"'), NULL, 'normal' );";
 
 			int rowsAffected = DBUtil.execSQL(insert);
 
