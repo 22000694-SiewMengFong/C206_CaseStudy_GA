@@ -13,7 +13,7 @@ public class Authentication {
 		// TODO prevent SQL Injection
 
 		// ERROR: SQL insert does not work - Invalid field name for password - 
-		//SQL database is in hexa while input is String - Not Match - DM Darrel for screenshoot
+		//SQL database is in hexadecimal while input is String - Not Match - DM Darrel for screenshot
 		// for screenshot
 		String email = Helper.readString("Enter your email > ");
 		email = SQLInjection(email);
@@ -41,7 +41,7 @@ public class Authentication {
 		// check email:
 
 		// NOTE: URL may be different depending on the name of the database
-		// ERROR: Password Not able to be matched - SQL database is in hexa while input is String - Not Match
+		// ERROR: Password Not able to be matched - SQL database is in hexadecimal while input is String - Not Match
 		email = SQLInjection(email);
 		password = SQLInjection(password);
 
