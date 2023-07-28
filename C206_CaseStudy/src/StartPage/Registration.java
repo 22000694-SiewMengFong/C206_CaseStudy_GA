@@ -21,24 +21,24 @@ public class Registration extends Application {
     private HBox vbPaneEntire = new HBox();
     private VBox vbPaneMain = new VBox();
     private HBox hbPane = new HBox();
-
+    //Create label display to be displayed on top of GUI
     private Label lbRegister1 = new Label("Register an Account");
     private Label lbRegister2 = new Label("Please enter your details to start"); // Corrected "you" to "your"
-
+    //Create respective label to ask user for input data
     private Label lbName = new Label("Enter name: ");
     private Label lbEmail = new Label("Enter email: ");
     private Label lbPassword1 = new Label("Enter password: ");
     private Label lbPassword2 = new Label("Confirm password: ");
-
+    //Create label to be displayed back to user based on certain conditions
     private Label lbRepsonse = new Label(""); // Corrected "Repsonse" to "Response"
-
+    //Create respective textbox to collect user input data
     private TextField tfName = new TextField();
     private TextField tfEmail = new TextField();
     private TextField tfPassword1 = new TextField();
     private TextField tfPassword2 = new TextField();
-
+    //Create button to be clicked by user upon filling all textfield
     private Button btCreate = new Button("Create Account");
-
+    //Create title of the GUI and the style of background
     private String title = "Registration Window";
     private String style = "-fx-background-color: blue; -fx-text-fill: white;";
     private String responseError = "-fx-text-fill: red;";
@@ -48,34 +48,43 @@ public class Registration extends Application {
     public static void main(String[] args) {
         launch(args);
     }
-
+    //Design of screen displayed
     @SuppressWarnings("exports")
     public void start(Stage primaryStage) {
+        // Setting up the horizontal box for button area
         hbPane.setSpacing(10);
         hbPane.setAlignment(Pos.BASELINE_CENTER);
-
+        
+        // Styling the "Create Account" button
         btCreate.setStyle(style);
+        // Styling the "Register an Account" label
         lbRegister1.setStyle("-fx-font: 20 arial;");
 
+        // Setting up the vertical box for the main content area
         vbPaneMain.setSpacing(10);
         vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
         vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
-        vbPaneMain.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPassword1,
-                tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse);
 
+        // Adding all the necessary elements to the main content area
+        vbPaneMain.getChildren().addAll(
+            lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail,
+            lbPassword1, tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse
+        );
+
+        // Setting the maximum width for the text fields
         tfName.setMaxWidth(MaxWidthTF);
         tfEmail.setMaxWidth(MaxWidthTF);
         tfPassword1.setMaxWidth(MaxWidthTF);
         tfPassword2.setMaxWidth(MaxWidthTF);
-
+        
+        // Adding the main content area and navigation bar to the entire horizontal box
         vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
-
         Scene register = new Scene(vbPaneEntire);
-
+        //Initialize stage
         FXHelper.loadStage(primaryStage, register, title, 500, 500);
-
+        //Add event for response 
         EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
-
+        	//To occur when boolean returned from EventHandler is true
             if (checkFields() == true) {
                 // David
                 // TODO SQL add in authenticate class
@@ -85,7 +94,7 @@ public class Registration extends Application {
                 String password = tfPassword1.getText();
 
                 // CreateAccount method within the Authentication class is called and the strings
-                // created earlier are used as arguments
+                // To display label text back to user
                 if (Authentication.CreateAccount(name, email, password)) {
                     lbRepsonse.setStyle(responseGood);
                     lbRepsonse.setText("Account Creation Successful");
@@ -96,10 +105,10 @@ public class Registration extends Application {
         btCreate.setOnAction(handleResponse);
 
     }
-
+    //Return boolean value based on whether user input data is valid
     private boolean checkFields() {
         lbRepsonse.setStyle(responseError);
-
+        //Retrieve input data from textfield
         String name = tfName.getText();
         String email = tfEmail.getText();
         String password1 = tfPassword1.getText();
@@ -145,7 +154,7 @@ public class Registration extends Application {
             return false;
         }
 
-        // ######## NEED CHECKING
+        // Checked
         // TODO Password is strong (OPTIONAL) - regex
         if (!isPassword(password1)) {
             lbRepsonse.setText("Password must include at least one capital letter and be at least 8 characters long.");
