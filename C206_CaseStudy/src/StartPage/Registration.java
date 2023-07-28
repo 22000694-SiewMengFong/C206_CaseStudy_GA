@@ -12,19 +12,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-
-import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
+import java.util.regex.Pattern;
+import HelperPackage.FXHelper;
 
 public class Registration extends Application {
 
@@ -86,19 +75,23 @@ public class Registration extends Application {
 		FXHelper.loadStage(primaryStage, register, title, 500, 500);
 
 		EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
-			if(checkFields()) {
-				//David
-				//TODO SQL add in authenticate class
-				//Inputs are collected and is stored within respective strings
+			
+			if (checkFields() == true) {
+				// David
+				// TODO SQL add in authenticate class
+				// Inputs are collected and is stored within respective strings
 				String name = tfName.getText();
-                String email = tfEmail.getText();
-                String password = tfPassword1.getText();
-                //CreateAccount method within Authentication class is called and strings created earlier are used as arguments
-				if (Authentication.CreateAccount(name,email,password)) {
+				String email = tfEmail.getText();
+				String password = tfPassword1.getText();
+				
+				// CreateAccount method within Authentication class is called and strings
+				// created earlier are used as arguments
+				if (Authentication.CreateAccount(name, email, password)) {
 					lbRepsonse.setStyle(responseGood);
 					lbRepsonse.setText("Account Creation Successful");
 				}
 			}
+			
 		};
 		btCreate.setOnAction(handleResponse);
 
@@ -106,65 +99,102 @@ public class Registration extends Application {
 
 	private boolean checkFields() {
 		lbRepsonse.setStyle(responseError);
+		
+		String name = tfName.getText();
+		String email = tfEmail.getText();
+		String password1 = tfPassword1.getText();
+		String password2 = tfPassword2.getText();
 
 		// Confirm mandatory fields are filled out
-		if (tfName.getText().isEmpty()) {
+		if (name.isEmpty()) {
 			lbRepsonse.setText("The field cannot be left blank. You must enter in a name");
 			return false;
 		}
 
-		if (lbEmail.getText().isEmpty()) {
+		if (email.isEmpty()) {
 			lbRepsonse.setText("The field cannot be left blank. You must enter in a email");
 			return false;
 		}
 
-		if (tfPassword1.getText().isEmpty()) {
+		if (password1.isEmpty()) {
 			lbRepsonse.setText("The field cannot be left blank. You must enter in a password");
 			return false;
 		}
 
-		if (tfPassword2.getText().isEmpty()) {
+		if (password2.isEmpty()) {
 			lbRepsonse.setText("The field cannot be left blank. You must enter in a password");
 			return false;
 		}
 
-		if (tfPassword1.getText().equals(tfPassword2.getText())) {
+		if (password1.equals(password2)) {
 			lbRepsonse.setText("Password entered must be the same.");
 			return false;
 		}
-		//David 
-		//TODO Name is all in alpha
-		//Method isAllAlpha is called below
-		 if (!isAllAlpha(tfName.getText())) {
-	            lbRepsonse.setText("Name must contain only alphabetic characters.");
-	            return false;
-	        }
-		//TODO Email is right format
-		 //Method isValidEmail is called below
-		 if (!isValidEmail(tfEmail.getText())) {
-	            lbRepsonse.setText("Invalid email format. Please enter a valid email address.");
-	            return false;
-	        }
-		//TODO Password is strong (OPTIONAL) - regex
-		 if (!tfPassword1.getText().matches("^(?=.*[A-Z]).{8,}$")) {
-			    lbRepsonse.setText("Password must include at least one capital letter and be at least 8 characters long.");
-			    return false;}
+		// David
+		// TODO Name is all in alpha
+		// Method isAllAlpha is called below
+		if (isName(name) == false) {
+			lbRepsonse.setText("Name must contain only alphabetic characters.");
+			return false;
+		}
+
+		// TODO Email is right format
+		// Method isValidEmail is called below
+		if (isEmail(email) == false) {
+			lbRepsonse.setText("Invalid email format. Please enter a valid email address.");
+			return false;
+		}
+
+		// ######## NEED CHECKING
+		// TODO Password is strong (OPTIONAL) - regex
+		if (isPassword(password1) == false) {
+			lbRepsonse.setText("Password must include at least one capital letter and be at least 8 characters long.");
+			return false;
+		}
 		return true;
 	}
-	
-	//Method used for name format,loops through the string thoroughly and return false if none alphabet is detected
-	private boolean isAllAlpha(String str) {
-	    for (char c : str.toCharArray()) {
-	        if (!Character.isLetter(c)) {
-	            return false;
-	        }
-	    }
-	    return true;
+
+	/**
+	 * Method is about validating name by checking if name is all in alphabetical
+	 * 
+	 * @param name
+	 * @return true if name matches
+	 */
+	private static boolean isName(String name) {
+
+		// Match name using RegEx
+		String pattern = "[a-zA-Z]+";
+
+		boolean matched = Pattern.matches(pattern, name);
+		return matched;
 	}
-	//Method used for email format, will return true if all conditions under checker are met
-	private boolean isValidEmail(String email) {
-		boolean checker=email.contains("@") && email.contains(".") && email.indexOf("@") < email.lastIndexOf(".");
-	    return checker;
+
+	/**
+	 * Method is about validating email by check if email contains @ and .
+	 * 
+	 * @param email
+	 * @return true if email matches
+	 */
+	private static boolean isEmail(String email) {
+
+		String pattern = "[a-zA-Z0-9]+@[a-zA-Z]+.[a-zA-Z]+";
+
+		boolean matched = Pattern.matches(pattern, email);
+		return matched;
+	}
+
+	/**
+	 * Method is about
+	 * 
+	 * @param password
+	 * @return
+	 */
+	private static boolean isPassword(String password) {
+
+		String pattern = "^(?=.*[A-Z]).{8,}$";
+
+		boolean matched = Pattern.matches(pattern, password);
+		return matched;
 	}
 
 }
