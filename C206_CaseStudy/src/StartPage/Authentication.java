@@ -1,5 +1,8 @@
 package StartPage;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import HelperPackage.DBUtil;
 
 //TODO fix select statement error
@@ -25,7 +28,7 @@ public class Authentication {
 
 		// ERROR: SQL execute not running in java
 		// FIXED: password can be retrieve by hashing user password to compare
-		
+
 		String check = null;
 
 		// Check if email exist in db
@@ -37,8 +40,8 @@ public class Authentication {
 			password = SQLInjection(password);
 
 			// Create and format SQL insert Statement
-			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access) VALUES ('" + name
-					+ "' , '" + email + "', SHA1('"+ password +"'), NULL, 'normal' );";
+			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access) VALUES ('"
+					+ name + "' , '" + email + "', SHA1('" + password + "'), NULL, 'normal' );";
 
 			int rowsAffected = DBUtil.execSQL(insert);
 
@@ -70,8 +73,8 @@ public class Authentication {
 		password = SQLInjection(password);
 
 		// Create and format SQL select Statement
-		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('" + password
-				+ "');";
+		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('"
+				+ password + "');";
 
 		int rowsAffected = DBUtil.execSQL(select);
 
@@ -108,13 +111,22 @@ public class Authentication {
 		boolean check = false;
 
 		// Create and format SQL select Statement
-		String select = "SELECT * FROM `user` WHERE `user_email` = '"+ email +"';";
 
-		int rowsAffected = DBUtil.execSQL(select);
+		String select = "SELECT * FROM user";
 
-		// Check if select is more than or equals to 1
-		if (rowsAffected >= 1) {
-			check = true;
+		ResultSet rs = DBUtil.getTable(select);
+		// Getting all the email from the SQL database and comparing it to the input
+		try {
+			while (rs.next()) {
+				String sqlEmail = rs.getString("user_email");
+				if (sqlEmail.equals(email)) {
+					check = true;
+					return check;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		DBUtil.close();
