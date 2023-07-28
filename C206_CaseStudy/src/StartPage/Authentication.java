@@ -75,9 +75,9 @@ public class Authentication {
 		// Create and format SQL select Statement
 		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('"
 				+ password + "');";
-
+		System.out.println(select);
 		int rowsAffected = DBUtil.execSQL(select);
-
+		System.out.println(rowsAffected);
 		// Validate if select is 1
 		if (rowsAffected == 1) {
 			check = true;
@@ -106,6 +106,7 @@ public class Authentication {
 	 */
 	private static boolean CheckEmailDB(String email) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		
 		email = SQLInjection(email);
 
 		boolean check = false;
@@ -121,11 +122,10 @@ public class Authentication {
 				String sqlEmail = rs.getString("user_email");
 				if (sqlEmail.equals(email)) {
 					check = true;
-					return check;
+					break;
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

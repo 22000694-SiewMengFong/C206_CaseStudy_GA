@@ -1,5 +1,6 @@
 package HelperPackage;
 
+import StartPage.AboutUs;
 import StartPage.Login;
 import StartPage.MainPage;
 import StartPage.Registration;
@@ -67,7 +68,7 @@ public class NavBar {
 		EventHandler<ActionEvent> handleAboutUs = (ActionEvent e) -> {
 			// Try open about us window else mainpage
 			try {
-				// (new AboutUs()).start(new Stage());
+				(new AboutUs()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
 				(new MainPage()).start(new Stage());
