@@ -75,12 +75,19 @@ public class Authentication {
 		// Create and format SQL select Statement
 		String select = "SELECT * FROM `user` WHERE `user_email` = '" + email + "' AND `user_password` = SHA1('"
 				+ password + "');";
-		System.out.println(select);
-		int rowsAffected = DBUtil.execSQL(select);
-		System.out.println(rowsAffected);
-		// Validate if select is 1
-		if (rowsAffected == 1) {
-			check = true;
+
+		ResultSet rs = DBUtil.getTable(select);
+		// Check if Email exist and that the password match
+		try {
+			if (rs != null) {
+				while (rs.next()) {
+					check = true;
+					return check;
+				}
+			} 
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 		DBUtil.close();
