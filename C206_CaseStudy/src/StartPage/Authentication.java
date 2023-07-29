@@ -113,11 +113,13 @@ public class Authentication {
 	 */
 	private static boolean CheckEmailDB(String email) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		
 		email = SQLInjection(email);
 
 		boolean check = false;
 
 		// Create and format SQL select Statement
+
 		String select = "SELECT * FROM user";
 
 		ResultSet rs = DBUtil.getTable(select);
@@ -127,11 +129,10 @@ public class Authentication {
 				String sqlEmail = rs.getString("user_email");
 				if (sqlEmail.equals(email)) {
 					check = true;
-					return check;
+					break;
 				}
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
