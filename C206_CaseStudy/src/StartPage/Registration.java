@@ -20,7 +20,6 @@ import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 
 
-//TODO Link Registration to HomePage NormalUser (NOT YET)
 
 public class Registration extends Application {
 
@@ -56,7 +55,6 @@ public class Registration extends Application {
 	private String stylebt = "-fx-background-color: blue; -fx-text-fill: white;";
 	private String stylelb = "-fx-font: 20 arial;";
 	private static String responseError = "-fx-text-fill: red;";
-	private String responseGood = "-fx-text-fill: green;";
 	private int MaxWidthTF = 200;
 
 	public static void main(String[] args) {
@@ -114,8 +112,8 @@ public class Registration extends Application {
 				
 				String access_type = Credential.getUser_access();
 				if (Credential != null && access_type != null ) {
-					lbRepsonse.setStyle(responseGood);
-					lbRepsonse.setText("Account Creation Successful");
+					primaryStage.close();
+					(new HomePage.NormalUser()).startCredential(Credential);
 				}
 			}
 

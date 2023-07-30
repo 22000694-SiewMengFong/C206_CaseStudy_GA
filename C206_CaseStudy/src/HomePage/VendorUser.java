@@ -4,7 +4,7 @@ import HelperPackage.DBData;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
-public class AdminUser extends Application {
+public class VendorUser extends Application {
 
 	private DBData credential;
 	

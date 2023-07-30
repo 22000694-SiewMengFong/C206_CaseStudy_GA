@@ -34,6 +34,7 @@ CREATE TABLE `user` (
   `user_password` varchar(100) NOT NULL,
   `user_picture` varchar(100) DEFAULT NULL,
   `user_access` varchar(50) NOT NULL
+  `LAST_LOGIN` datetime
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --

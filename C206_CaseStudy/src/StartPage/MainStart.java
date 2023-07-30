@@ -27,16 +27,24 @@ public class MainStart extends Application {
 	// Creates label to put in Main screen
 	private Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
 	private Label lbAppTitleAsk = new Label("Please login/register to start");
-
+	private Label lbReturn = new Label("");
+	
 	// Basic setting of the class
 	private String stylebt = "-fx-background-color: blue; -fx-text-fill: white;";
 	private String stylelb = "-fx-font: 20 arial;";
 	private String title = "GA login/registion page";
-
+	private static String responseError = "-fx-text-fill: red;";
+	
 	public static void main(String[] args) {
 		launch(args);
 	} // End of Main
 
+	public void startReturn(String error) {
+		lbReturn.setStyle(responseError);
+		lbReturn.setText(error);
+		start(new Stage());
+	}
+	
 	@SuppressWarnings("exports")
 	public void start(Stage primaryStage) {
 
@@ -55,7 +63,7 @@ public class MainStart extends Application {
 		vbPaneMain.setAlignment(Pos.CENTER);
 
 		lbAppTitleWelcome.setStyle(stylelb);
-		vbPaneMain.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk, hbPaneBt);
+		vbPaneMain.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk, hbPaneBt, lbReturn);
 
 		// Add Nav bar followed by main screen
 		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
