@@ -13,6 +13,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.util.regex.Pattern;
+
+import HelperPackage.Authentication;
 import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 
@@ -107,7 +109,10 @@ public class Registration extends Application {
 				String password = tfPassword1.getText();
 
 				// Check if access is create by checking if it is empty
-				String access_type = Authentication.CreateAccount(name, email, password);
+				String[] LoginInfo = new String[2];
+				LoginInfo = Authentication.CreateAccountNormal(name, email, password);
+				
+				String access_type = LoginInfo[1];
 				if (access_type.isEmpty()) {
 					lbRepsonse.setStyle(responseGood);
 					lbRepsonse.setText("Account Creation Successful");
@@ -143,35 +148,40 @@ public class Registration extends Application {
 		else if (name.isEmpty()) {
 			check = ResponseReturn("The field Name cannot be left blank. You must enter in a name");
 		}
+		
+		else if (isName(name) == false) {
+			check = ResponseReturn("Name must contain only alphabetic characters.");
+		}
 
 		else if (email.isEmpty()) {
 			check = ResponseReturn("The field Email cannot be left blank. You must enter in an email");
 		}
 
+		else if (isEmail(email) == false) {
+			check = ResponseReturn("Invalid email format. Please enter a valid email address.");
+		}
+		
 		else if (password1.isEmpty()) {
 			check = ResponseReturn("The field Password cannot be left blank. You must enter in a password");
 		}
+		
+		else if (isPassword(password1) == false) {
+			check = ResponseReturn(
+					"Password must include at least one capital letter and be at least 8 characters long.");
+		} 
 
 		else if (password2.isEmpty()) {
 			check = ResponseReturn("The field Confirm Password cannot be left blank. You must enter in a password");
 		}
 
-		else if (password1.equals(password2) == false) {
-			check = ResponseReturn("Password entered must be the same.");
-		}
-
-		else if (isName(name) == false) {
-			check = ResponseReturn("Name must contain only alphabetic characters.");
-		}
-
-		else if (isEmail(email) == false) {
-			check = ResponseReturn("Invalid email format. Please enter a valid email address.");
-		}
-
-		else if (isPassword(password1) == false) {
+		else if (isPassword(password2) == false) {
 			check = ResponseReturn(
 					"Password must include at least one capital letter and be at least 8 characters long.");
 		} 
+		
+		else if (password1.equals(password2) == false) {
+			check = ResponseReturn("Password entered must be the same.");
+		}
 		
 		else {
 			ResponseReturn("");

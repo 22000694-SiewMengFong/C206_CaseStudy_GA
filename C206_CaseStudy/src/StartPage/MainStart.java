@@ -13,7 +13,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class MainPage extends Application {
+public class MainStart extends Application {
 
 	// Create Box by Entire screen, Main screen, button area
 	private HBox vbPaneEntire = new HBox();
@@ -73,7 +73,7 @@ public class MainPage extends Application {
 				(new Login()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
-				(new MainPage()).start(new Stage());
+				(new MainStart()).start(new Stage());
 				primaryStage.close();
 			}
 		};
@@ -87,7 +87,7 @@ public class MainPage extends Application {
 				(new Registration()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
-				(new MainPage()).start(new Stage());
+				(new MainStart()).start(new Stage());
 				primaryStage.close();
 			}
 

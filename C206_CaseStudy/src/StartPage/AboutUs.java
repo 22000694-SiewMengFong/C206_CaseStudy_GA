@@ -38,6 +38,7 @@ public class AboutUs extends Application {
 
 	@SuppressWarnings("exports")
 	public void start(Stage primaryStage) {
+		
 
 		// Design of button area
 		hbPaneBt.setSpacing(10);
@@ -53,7 +54,7 @@ public class AboutUs extends Application {
 		vbPaneMain.setAlignment(Pos.CENTER);
 
 		lbAboutUs.setStyle(stylelb);
-		vbPaneMain.getChildren().addAll(lbAboutUs, lbRepsonse, hbPaneBt);
+		vbPaneMain.getChildren().addAll(lbAboutUs,lbRepsonse, hbPaneBt);
 
 		// Add Nav bar followed by main screen
 		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);

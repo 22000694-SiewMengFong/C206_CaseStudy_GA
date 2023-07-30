@@ -2,7 +2,7 @@ package HelperPackage;
 
 import StartPage.AboutUs;
 import StartPage.Login;
-import StartPage.MainPage;
+import StartPage.MainStart;
 import StartPage.Registration;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 
 public class NavBar {
 
+	@SuppressWarnings("exports")
 	public static HBox navBarStart(Stage primaryStage) {
 		// create a label
 		ToolBar toolbar = new ToolBar();
@@ -33,7 +34,7 @@ public class NavBar {
 
 		// Add event for main page button
 		EventHandler<ActionEvent> handleMainPage = (ActionEvent e) -> {
-			(new MainPage()).start(new Stage());
+			(new MainStart()).start(new Stage());
 			primaryStage.close();
 		};
 		btMainPage.setOnAction(handleMainPage);
@@ -45,7 +46,7 @@ public class NavBar {
 				(new Login()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
-				(new MainPage()).start(new Stage());
+				(new MainStart()).start(new Stage());
 				primaryStage.close();
 			}
 		};
@@ -58,7 +59,7 @@ public class NavBar {
 				(new Registration()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
-				(new MainPage()).start(new Stage());
+				(new MainStart()).start(new Stage());
 				primaryStage.close();
 			}
 		};
@@ -71,7 +72,7 @@ public class NavBar {
 				(new AboutUs()).start(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
-				(new MainPage()).start(new Stage());
+				(new MainStart()).start(new Stage());
 				primaryStage.close();
 			}
 		};

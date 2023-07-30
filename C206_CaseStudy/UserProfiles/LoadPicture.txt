@@ -1,0 +1,9 @@
+		GridPane grid = new GridPane();
+		grid.setAlignment(Pos.CENTER);
+
+		Image img = new Image("file:UserProfiles/admin.png");
+		ImageView imgView = new ImageView(img);
+
+		grid.add(imgView, 0, 0);
+		
+		ADD grid to vbPane / hbPane

@@ -1,5 +1,6 @@
 package StartPage;
 
+import HelperPackage.Authentication;
 import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 import javafx.application.Application;
@@ -83,9 +84,23 @@ public class Login extends Application {
 			if (checkFields() == true) {
 				String email = tfEmail.getText();
 				String password = tfPassword.getText();
-				if (Authentication.LoginAccount(email, password) == true) {
-					// TODO Move user to user's page (DONT DO YET)
-					ResponseReturn("Sccue");
+
+				String[] LoginInfo = Authentication.LoginAccount(email, password);
+				if (LoginInfo != null) {
+
+					String access = LoginInfo[1];
+					
+					switch (access) {
+					case "normal":
+						break;
+					case "vendor":
+						break;
+					case "admin":
+						break;
+					default:
+						ResponseReturn("Something went wrong. Authentication failed.");
+						
+					}
 				} else {
 					ResponseReturn("Email or Password is invalid. Try Again.");
 				}
