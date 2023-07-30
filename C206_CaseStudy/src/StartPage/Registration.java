@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.util.regex.Pattern;
 
 import HelperPackage.Authentication;
+import HelperPackage.DBData;
 import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 
@@ -109,11 +110,10 @@ public class Registration extends Application {
 				String password = tfPassword1.getText();
 
 				// Check if access is create by checking if it is empty
-				String[] LoginInfo = new String[2];
-				LoginInfo = Authentication.CreateAccountNormal(name, email, password);
+				DBData Credential =  Authentication.CreateAccountNormal(name, email, password);
 				
-				String access_type = LoginInfo[1];
-				if (access_type.isEmpty()) {
+				String access_type = Credential.getUser_access();
+				if (Credential != null && access_type != null ) {
 					lbRepsonse.setStyle(responseGood);
 					lbRepsonse.setText("Account Creation Successful");
 				}

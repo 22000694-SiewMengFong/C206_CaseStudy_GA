@@ -1,6 +1,7 @@
 package StartPage;
 
 import HelperPackage.Authentication;
+import HelperPackage.DBData;
 import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 import javafx.application.Application;
@@ -85,17 +86,20 @@ public class Login extends Application {
 				String email = tfEmail.getText();
 				String password = tfPassword.getText();
 
-				String[] LoginInfo = Authentication.LoginAccount(email, password);
-				if (LoginInfo != null) {
+				DBData Credential = Authentication.LoginAccount(email, password);
+				if (Credential != null && Credential.getUser_id() != null) {
 
-					String access = LoginInfo[1];
+					String access = Credential.getUser_access();
 					
 					switch (access) {
 					case "normal":
+						ResponseReturn("Normal type");
 						break;
 					case "vendor":
+						ResponseReturn("Vendor type");
 						break;
 					case "admin":
+						ResponseReturn("Admin type");
 						break;
 					default:
 						ResponseReturn("Something went wrong. Authentication failed.");
