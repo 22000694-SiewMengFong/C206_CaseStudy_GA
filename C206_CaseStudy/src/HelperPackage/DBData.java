@@ -3,6 +3,7 @@ package HelperPackage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
 public class DBData {
 
 	// NOTE: URL may be different depending on the name of the database
@@ -25,7 +26,6 @@ public class DBData {
 	 * @param user_picture
 	 */
 	public DBData(String email, String password, String access, String name, String picture) {
-		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 
 		boolean check = AddAccountDB(email, password, access, name, picture);
 		if (check == false) {
@@ -101,6 +101,15 @@ public class DBData {
 					data[1] = rs.getString("user_access");
 					data[2] = rs.getString("user_name");
 					data[3] = rs.getString("user_picture");
+					
+					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
+					int rowsAffected = DBUtil.execSQL(updateSQL);
+
+					// Set data null if update of Last Login fails
+					if (rowsAffected != 1) {
+						data = null;
+					} 
+					
 					break;
 				}
 			} else {
@@ -130,8 +139,8 @@ public class DBData {
 			password = SQLInjection(password);
 
 			// Create and format SQL insert Statement
-			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access) VALUES ('"
-					+ name + "' , '" + email + "', SHA1('" + password + "'), " + picture + ", '" + access + "')";
+			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access, LAST_LOGIN) VALUES ('"
+					+ name + "' , '" + email + "', SHA1('" + password + "'), " + picture + ", '" + access + "', NOW())";
 
 			int rowsAffected = DBUtil.execSQL(insert);
 

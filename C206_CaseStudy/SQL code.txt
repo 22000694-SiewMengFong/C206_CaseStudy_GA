@@ -33,23 +33,23 @@ CREATE TABLE `user` (
   `user_email` varchar(100) NOT NULL,
   `user_password` varchar(100) NOT NULL,
   `user_picture` varchar(100) DEFAULT NULL,
-  `user_access` varchar(50) NOT NULL
-  `LAST_LOGIN` datetime
+  `user_access` varchar(50) NOT NULL,
+  `LAST_LOGIN` datetime(6) NOT Null
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_name`, `user_email`, `user_password`, `user_picture`, `user_access`) VALUES
-(0, 'user1', 'user1@c.c', SHA1('user1'), 'user.png', 'normal'),
-(1, 'user2', 'user2@c.c', SHA1('user2'), 'user.png', 'normal'),
-(2, 'user3', 'user3@c.c', SHA1('user3'), 'user.png', 'normal'),
-(3, 'user4', 'user4@c.c', SHA1('user4'), 'user.png', 'normal'),
-(4, 'admim1', 'admin1@c.c', SHA1('admin1'), 'admin.png', 'admin'),
-(5, 'admim2', 'admin2@c.c', SHA1('admin2'), 'admin.png', 'admin'),
-(6, 'vendor1', 'vendor1@c.c', SHA1('vendor1'), 'vendor.png', 'vendor'),
-(7, 'vendor2', 'vendor2@c.c', SHA1('vendor2'), 'vendor.png', 'vendor');
+INSERT INTO `user` (`user_id`, `user_name`, `user_email`, `user_password`, `user_picture`, `user_access`, `LAST_LOGIN`) VALUES
+(0, 'user1', 'user1@c.c', SHA1('user1'), 'user.png', 'normal', NOW()),
+(1, 'user2', 'user2@c.c', SHA1('user2'), 'user.png', 'normal', NOW()),
+(2, 'user3', 'user3@c.c', SHA1('user3'), 'user.png', 'normal', NOW()),
+(3, 'user4', 'user4@c.c', SHA1('user4'), 'user.png', 'normal', NOW()),
+(4, 'admim1', 'admin1@c.c', SHA1('admin1'), 'admin.png', 'admin', NOW()),
+(5, 'admim2', 'admin2@c.c', SHA1('admin2'), 'admin.png', 'admin', NOW()),
+(6, 'vendor1', 'vendor1@c.c', SHA1('vendor1'), 'vendor.png', 'vendor', NOW()),
+(7, 'vendor2', 'vendor2@c.c', SHA1('vendor2'), 'vendor.png', 'vendor', NOW());
 --
 -- Indexes for dumped tables
 --
