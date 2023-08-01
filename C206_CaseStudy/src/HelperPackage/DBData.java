@@ -3,7 +3,6 @@ package HelperPackage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-
 public class DBData {
 
 	// NOTE: URL may be different depending on the name of the database
@@ -89,8 +88,8 @@ public class DBData {
 
 		String[] data = new String[4];
 
-		String select = "SELECT user_access, user_id, user_name, user_picture FROM `user` WHERE `user_email` = '"
-				+ email + "' AND `user_password` = SHA1('" + password + "');";
+		String select = "SELECT user_access, user_id, user_name, user_picture FROM `user` WHERE `user_email` = SHA1('"
+				+ email + "') AND `user_password` = SHA1('" + password + "');";
 
 		ResultSet rs = DBUtil.getTable(select);
 
@@ -101,15 +100,15 @@ public class DBData {
 					data[1] = rs.getString("user_access");
 					data[2] = rs.getString("user_name");
 					data[3] = rs.getString("user_picture");
-					
+
 					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
 					int rowsAffected = DBUtil.execSQL(updateSQL);
 
 					// Set data null if update of Last Login fails
 					if (rowsAffected != 1) {
 						data = null;
-					} 
-					
+					}
+
 					break;
 				}
 			} else {
@@ -140,13 +139,40 @@ public class DBData {
 
 			// Create and format SQL insert Statement
 			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access, LAST_LOGIN) VALUES ('"
-					+ name + "' , '" + email + "', SHA1('" + password + "'), " + picture + ", '" + access + "', NOW())";
+					+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), " + picture + ", '" + access
+					+ "', NOW())";
 
-			int rowsAffected = DBUtil.execSQL(insert);
-
+			int rowsAffectedUser = DBUtil.execSQL(insert);
 			// Validate if insert is 1
-			if (rowsAffected == 1) {
+			if (rowsAffectedUser == 1) {
 				check = true;
+			}
+
+			DBData(email, password);
+			// adding to account types
+			if (access.equalsIgnoreCase("normal")) {
+				int phoneNo = Helper.readInt("Enter phone number > ");
+				String allegies = Helper.readString("Enter Allegies > ");
+				allegies = SQLInjection(allegies);
+				String address = Helper.readString("Enter Address > ");
+				address = SQLInjection(address);
+				insert = "INSERT INTO normal(normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
+						+ getUser_id() + "' ,'" + phoneNo + "'), '" + address + "'), " + picture + ", '" + allegies
+						+ "');";
+
+			} else if (access.equalsIgnoreCase("vendor")) {
+				int phoneNo = Helper.readInt("Enter phone number > ");
+				String address = Helper.readString("Enter Address > ");
+				address = SQLInjection(address);
+				String companyName = Helper.readString("Enter Company Name > ");
+				companyName = SQLInjection(companyName);
+				insert = "INSERT INTO vendor(vendor_id, vendor_phoneNumber, vendor_companyName, normal_profile, vendor_address, menu_id) VALUES ('"
+						+ getUser_id() + "' ,'" + phoneNo + "'), '" + companyName + "'), " + picture + ", '" + address
+						+ "', '" + getMenu_id() + "');";
+
+			} else if (access.equalsIgnoreCase("admin")) {
+				insert = "INSERT INTO admin(admin_id, admin_profile) VALUES ('" + getUser_id() + "' , '" + picture
+						+ "');";
 			}
 		}
 
@@ -185,20 +211,19 @@ public class DBData {
 
 		// Create and format SQL select Statement
 
-		String select = "SELECT user_email FROM user";
+		String select = "SELECT user_email FROM user WHERE `user_email` = SHA1('" + email + "');";
 
 		ResultSet rs = DBUtil.getTable(select);
 		// Getting all the email from the SQL database and comparing it to the input
-		try {
-			while (rs.next()) {
-				String sqlEmail = rs.getString("user_email");
-				if (sqlEmail.equals(email)) {
+		// if rs = null - no result
+		if (rs != null) {
+			try {
+				while (rs.next()) {
 					check = true;
-					break;
 				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 
 		DBUtil.close();
