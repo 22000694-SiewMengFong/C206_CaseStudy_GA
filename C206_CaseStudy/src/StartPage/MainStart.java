@@ -92,7 +92,7 @@ public class MainStart extends Application {
 			
 			// Try open register window else mainpage
 			try {
-				(new Registration()).start(new Stage());
+				(new Registration()).RegisterNormal(new Stage());
 				primaryStage.close();
 			} catch (Exception ex) {
 				(new MainStart()).start(new Stage());
