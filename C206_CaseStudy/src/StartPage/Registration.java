@@ -115,7 +115,7 @@ public class Registration extends Application {
 				String password = tfPassword1.getText();
 
 				// Check if access is create by checking if it is empty
-				DBData Credential = Authentication.CreateAccountNormal(name, email, password);
+				DBData Credential = Authentication.CreateAccountNormal(name, email, password, );
 
 				String access_type = Credential.getUser_access();
 				if (Credential != null && access_type != null) {
@@ -128,7 +128,7 @@ public class Registration extends Application {
 		btCreate.setOnAction(handleResponse);
 
 	}
-
+ 
 	@SuppressWarnings("exports")
 	public void RegisterVendor(Stage primaryStage) {
 		// Setting up the horizontal box for button area
