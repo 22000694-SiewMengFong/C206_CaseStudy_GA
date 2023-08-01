@@ -16,6 +16,7 @@ public class DBData {
 	private static String user_id;
 	private static String user_name;
 	private static String user_picture;
+	private static String menu_id;
 
 	/**
 	 * Creates Account
@@ -57,6 +58,9 @@ public class DBData {
 		user_access = data[1];
 		user_name = data[2];
 		user_picture = data[3];
+		if (user_access.equals("vendor")) {
+			menu_id = data[4];
+		}
 	}
 
 	// TODO NOT YET
@@ -78,6 +82,10 @@ public class DBData {
 
 	public String getUser_picture() {
 		return user_picture;
+	}
+
+	public String getMenu_id() {
+		return menu_id;
 	}
 
 	// ===============================
@@ -164,27 +172,20 @@ public class DBData {
 						+ user_id + "' ,'" + phoneNo + "'), '" + address + "'), " + picture + ", '" + allegies + "');";
 				break;
 			case "vendor":
-
-				break;
-			case "admin":
-
-				break;
-			default:
-
-			}
-if (access.equalsIgnoreCase("vendor")) {
-				int phoneNo = Helper.readInt("Enter phone number > ");
-				String address = Helper.readString("Enter Address > ");
+				phoneNo = Helper.readInt("Enter phone number > ");
+				address = Helper.readString("Enter Address > ");
 				address = SQLInjection(address);
 				String companyName = Helper.readString("Enter Company Name > ");
 				companyName = SQLInjection(companyName);
+				int menu = Integer.parseInt(menu_id);
 				insert = "INSERT INTO vendor(vendor_id, vendor_phoneNumber, vendor_companyName, normal_profile, vendor_address, menu_id) VALUES ('"
 						+ user_id + "' ,'" + phoneNo + "'), '" + companyName + "'), " + picture + ", '" + address
-						+ "', '" + menu_id + "');";
-
-			} else if (access.equalsIgnoreCase("admin")) {
-				insert = "INSERT INTO admin(admin_id, admin_profile) VALUES ('" + getUser_id() + "' , '" + picture
-						+ "');";
+						+ "', '" + menu + "');";
+				break;
+			case "admin":
+				insert = "INSERT INTO admin(admin_id, admin_profile) VALUES ('" + user_id + "' , '" + picture + "');";
+				break;
+			default:
 			}
 		}
 
