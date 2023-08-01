@@ -3,6 +3,8 @@ package HelperPackage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import javafx.stage.Stage;
+
 public class DBData {
 
 	// NOTE: URL may be different depending on the name of the database
@@ -10,10 +12,10 @@ public class DBData {
 	private static String dbUsername = "root";
 	private static String dbPassword = "";
 
-	private String user_access;
-	private String user_id;
-	private String user_name;
-	private String user_picture;
+	private static String user_access;
+	private static String user_id;
+	private static String user_name;
+	private static String user_picture;
 
 	/**
 	 * Creates Account
@@ -148,27 +150,37 @@ public class DBData {
 				check = true;
 			}
 
-			DBData(email, password);
+			FindAccount(email, password);
 			// adding to account types
-			if (access.equalsIgnoreCase("normal")) {
+
+			switch (access) {
+			case "normal":
 				int phoneNo = Helper.readInt("Enter phone number > ");
 				String allegies = Helper.readString("Enter Allegies > ");
 				allegies = SQLInjection(allegies);
 				String address = Helper.readString("Enter Address > ");
 				address = SQLInjection(address);
 				insert = "INSERT INTO normal(normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
-						+ getUser_id() + "' ,'" + phoneNo + "'), '" + address + "'), " + picture + ", '" + allegies
-						+ "');";
+						+ user_id + "' ,'" + phoneNo + "'), '" + address + "'), " + picture + ", '" + allegies + "');";
+				break;
+			case "vendor":
 
-			} else if (access.equalsIgnoreCase("vendor")) {
+				break;
+			case "admin":
+
+				break;
+			default:
+
+			}
+if (access.equalsIgnoreCase("vendor")) {
 				int phoneNo = Helper.readInt("Enter phone number > ");
 				String address = Helper.readString("Enter Address > ");
 				address = SQLInjection(address);
 				String companyName = Helper.readString("Enter Company Name > ");
 				companyName = SQLInjection(companyName);
 				insert = "INSERT INTO vendor(vendor_id, vendor_phoneNumber, vendor_companyName, normal_profile, vendor_address, menu_id) VALUES ('"
-						+ getUser_id() + "' ,'" + phoneNo + "'), '" + companyName + "'), " + picture + ", '" + address
-						+ "', '" + getMenu_id() + "');";
+						+ user_id + "' ,'" + phoneNo + "'), '" + companyName + "'), " + picture + ", '" + address
+						+ "', '" + menu_id + "');";
 
 			} else if (access.equalsIgnoreCase("admin")) {
 				insert = "INSERT INTO admin(admin_id, admin_profile) VALUES ('" + getUser_id() + "' , '" + picture
