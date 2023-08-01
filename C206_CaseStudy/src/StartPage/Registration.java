@@ -106,14 +106,19 @@ public class Registration extends Application {
 				String name = tfName.getText();
 				String email = tfEmail.getText();
 				String password = tfPassword1.getText();
-
 				// Check if access is create by checking if it is empty
 				DBData Credential =  Authentication.CreateAccountNormal(name, email, password);
 				
 				String access_type = Credential.getUser_access();
-				if (Credential != null && access_type != null ) {
+				if (Credential != null && access_type.equals("normal") ) {
 					primaryStage.close();
 					(new HomePage.NormalUser()).startCredential(Credential);
+				} else if (Credential != null && access_type.equals("vendor")){
+					primaryStage.close();
+					(new HomePage.VendorUser()).startCredential(Credential);
+				} else if (Credential != null && access_type.equals("admin")) {
+					primaryStage.close();
+					(new HomePage.AdminUser()).startCredential(Credential);
 				}
 			}
 
