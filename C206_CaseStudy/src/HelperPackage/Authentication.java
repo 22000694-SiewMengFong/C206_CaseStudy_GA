@@ -19,7 +19,7 @@ public class Authentication {
 	private static DBData CreateAccount(String name, String email, String password, String access) {
 
 		String picture = null;
-		
+
 		// Return Credential
 		DBData Credential = new DBData(email, password, access, name, picture);
 
@@ -32,6 +32,7 @@ public class Authentication {
 	 * @param name
 	 * @param email
 	 * @param password
+	 * @param additionalData
 	 * @return
 	 */
 	public static DBData CreateAccountNormal(String name, String email, String password) {
@@ -40,7 +41,7 @@ public class Authentication {
 
 		// Create normal account
 		DBData Credential = CreateAccount(name, email, password, access);
-		
+
 		return Credential;
 
 	} // End of CreateAccountNormal
@@ -87,10 +88,10 @@ public class Authentication {
 	// Login to account and returns Login Credential
 	// (DONE - NEED CHECKING)
 	// ===============================
-	
+
 	public static DBData LoginAccount(String email, String password) {
 		DBData Credential = new DBData(email, password);
-		
+
 		return Credential;
 	}
 

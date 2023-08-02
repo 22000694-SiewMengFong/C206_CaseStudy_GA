@@ -16,6 +16,7 @@ public class DBData {
 	private static String user_id;
 	private static String user_name;
 	private static String user_picture;
+	private static String user_email;
 	private static String menu_id;
 
 	/**
@@ -55,11 +56,13 @@ public class DBData {
 		String[] data = FindAccount(email, password);
 
 		user_id = data[0];
-		user_access = data[1];
-		user_name = data[2];
-		user_picture = data[3];
+		user_name = data[1];
+		user_email = data[2];
+		user_access = data[3];
+		user_picture = data[4];
 		if (user_access.equals("vendor")) {
-			menu_id = data[4];
+			System.out.println("IS this the errro 2?");
+			menu_id = data[5];
 		}
 	}
 
@@ -88,6 +91,10 @@ public class DBData {
 		return menu_id;
 	}
 
+	public String getUser_email() {
+		return user_email;
+	}
+
 	// ===============================
 	// Find and Add Account in DB
 	// (DONE - NEED CHECKING)
@@ -95,34 +102,52 @@ public class DBData {
 
 	private static String[] FindAccount(String email, String password) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
-
-		String[] data = new String[4];
-
-		String select = "SELECT user_access, user_id, user_name, user_picture FROM `user` WHERE `user_email` = SHA1('"
-				+ email + "') AND `user_password` = SHA1('" + password + "');";
+		// connecting to DB and storing info
+		String[] data = new String[6];
+		String select = "SELECT * FROM user WHERE user_email = SHA1('" + email + "') AND user_password = SHA1('"
+				+ password + "');";
 
 		ResultSet rs = DBUtil.getTable(select);
-
 		try {
-			if (rs != null) {
-				while (rs.next()) {
-					data[0] = rs.getString("user_id");
-					data[1] = rs.getString("user_access");
-					data[2] = rs.getString("user_name");
-					data[3] = rs.getString("user_picture");
+			while (rs.next()) {
+				data[0] = rs.getString("user_id");
+				data[1] = rs.getString("user_name");
+				data[2] = rs.getString("user_email");
+				data[3] = rs.getString("ACCESS_TYPE");
 
+				// Determine access type > access_type data
+				switch (data[3]) {
+				case "normal":
+					String selectNormal = "SELECT normal_profile FROM normal WHERE normal_id = '" + data[0] + "'";
+					ResultSet rsNormal = DBUtil.getTable(selectNormal);
+					while (rsNormal.next()) {
+						data[4] = rsNormal.getString("normal_profile");
+					}
+					break;
+				case "vendor":
+					String selectVendor = "SELECT * FROM vendor WHERE vendor_id = '" + data[0] + "'";
+					ResultSet rsVendor = DBUtil.getTable(selectVendor);
+					while (rsVendor.next()) {
+						data[4] = rsVendor.getString("normal_profile");
+						data[5] = rsVendor.getString("menu_id");
+					}
+					break;
+				case "admin":
+					String selectAdmin = "SELECT * FROM admin WHERE admin_id = '" + data[0] + "'";
+					ResultSet rsAdmin = DBUtil.getTable(selectAdmin);
+					while (rsAdmin.next()) {
+						data[4] = rsAdmin.getString("admin_profile");
+						break;
+					}
+					// update last login
 					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
 					int rowsAffected = DBUtil.execSQL(updateSQL);
-
 					// Set data null if update of Last Login fails
 					if (rowsAffected != 1) {
 						data = null;
 					}
-
 					break;
 				}
-			} else {
-				data = null;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

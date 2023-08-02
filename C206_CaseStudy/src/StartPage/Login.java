@@ -34,8 +34,8 @@ public class Login extends Application {
 	private static Label lbRepsonse = new Label("");
 
 	// Create textfield to store user input data
-	private static TextField tfEmail = new TextField("user1@c.c");
-	private static TextField tfPassword = new TextField("user1");
+	private static TextField tfEmail = new TextField("normal1@normal1");
+	private static TextField tfPassword = new TextField("normal1");
 
 	// Create button for user to click to login
 	private Button btLogin = new Button("Login");
@@ -90,7 +90,7 @@ public class Login extends Application {
 				if (Credential != null && Credential.getUser_id() != null) {
 
 					String access = Credential.getUser_access();
-					
+
 					switch (access) {
 					case "normal":
 						primaryStage.close();
@@ -106,7 +106,7 @@ public class Login extends Application {
 						break;
 					default:
 						ResponseReturn("Something went wrong. Authentication failed.");
-						
+
 					}
 				} else {
 					ResponseReturn("Email or Password is invalid. Try Again.");

@@ -38,7 +38,6 @@ public class Registration extends Application {
 	private Label lbPhoneNumber = new Label("Enter phone number: ");
 	private Label lbAddress = new Label("Enter address: ");
 	private Label lbAllegies = new Label("Enter allegies: ");
-	private Label lbCompanyName = new Label("Enter company name: ");
 
 	// Create label to be displayed back to user based on certain conditions
 	private static Label lbRepsonse = new Label("");
@@ -113,7 +112,8 @@ public class Registration extends Application {
 				String name = tfName.getText();
 				String email = tfEmail.getText();
 				String password = tfPassword1.getText();
-
+				String companyName = tfCompanyName.getText();
+		        String phoneNumber = tfPhoneNumber.getText();
 				// Check if access is create by checking if it is empty
 				DBData Credential = Authentication.CreateAccountNormal(name, email, password);
 
@@ -130,7 +130,7 @@ public class Registration extends Application {
 	}
 
 	@SuppressWarnings("exports")
-	public void RegisterVendor(Stage primaryStage) {
+	public void RegisterVendor(Stage primaryStage) { 
 		// Setting up the horizontal box for button area
 		hbPane.setSpacing(10);
 		hbPane.setAlignment(Pos.BASELINE_CENTER);
@@ -235,23 +235,14 @@ public class Registration extends Application {
 				String name = tfName.getText();
 				String email = tfEmail.getText();
 				String password = tfPassword1.getText();
+
 				// Check if access is create by checking if it is empty
 				DBData Credential = Authentication.CreateAccountNormal(name, email, password);
 
 				String access_type = Credential.getUser_access();
-
-				if (Credential != null && access_type.equals("normal") ) {
-
 				if (Credential != null && access_type != null) {
-
 					primaryStage.close();
 					(new HomePage.NormalUser()).startCredential(Credential);
-				} else if (Credential != null && access_type.equals("vendor")){
-					primaryStage.close();
-					(new HomePage.VendorUser()).startCredential(Credential);
-				} else if (Credential != null && access_type.equals("admin")) {
-					primaryStage.close();
-					(new HomePage.AdminUser()).startCredential(Credential);
 				}
 			}
 
