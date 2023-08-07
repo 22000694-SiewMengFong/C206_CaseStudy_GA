@@ -47,10 +47,6 @@ public class Login extends Application {
 	private static String responseError = "-fx-text-fill: red;";
 	private int MaxWidthTF = 200;
 
-	public static void main(String[] args) {
-		launch(args);
-	} // End of main
-
 	@SuppressWarnings("exports")
 	public void start(Stage primaryStage) {
 		// Setting up the horizontal box for button area

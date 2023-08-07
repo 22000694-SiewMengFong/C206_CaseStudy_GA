@@ -3,8 +3,6 @@ package HelperPackage;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import javafx.stage.Stage;
-
 public class DBData {
 
 	// NOTE: URL may be different depending on the name of the database
@@ -15,7 +13,7 @@ public class DBData {
 	private static String user_access;
 	private static String user_id;
 	private static String user_name;
-	private static String user_picture;
+	private String user_picture;
 
 	/**
 	 * Creates Account
@@ -26,9 +24,9 @@ public class DBData {
 	 * @param user_name
 	 * @param user_picture
 	 */
-	public DBData(String email, String password, String access, String name, String picture) {
+	public DBData(String email, String password, String access, String name, String picture, String[] otherInfo) {
 
-		boolean check = AddAccountDB(email, password, access, name, picture);
+		boolean check = AddAccountDB(email, password, access, name, picture, otherInfo);
 		if (check == false) {
 			user_id = null;
 			user_access = null;
@@ -59,7 +57,6 @@ public class DBData {
 		user_picture = data[3];
 	}
 
-	// TODO NOT YET
 	public void setUser_picture(String user_picture) {
 		this.user_picture = user_picture;
 	}
@@ -125,73 +122,119 @@ public class DBData {
 		return data;
 	}
 
-	private static boolean AddAccountDB(String email, String password, String access, String name, String picture) {
-		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+	private static boolean AddAccountDB(String email, String password, String access, String name, String picture,
+			String[] otherInfo) {
 
 		// Return Check
 		boolean check = false;
 
 		// Check if email exist in db
-		if (CheckEmailDB(email) == false) {
+		if (CheckEmailDB(email) == true) {
+			return check;
+		}
 
-			// Prevent SQL injection
-			email = SQLInjection(email);
-			name = SQLInjection(name);
-			password = SQLInjection(password);
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 
-			// Create and format SQL insert Statement
-			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access, LAST_LOGIN) VALUES ('"
-					+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), " + picture + ", '" + access
-					+ "', NOW())";
+		// Prevent SQL injection
+		email = SQLInjection(email);
+		name = SQLInjection(name);
+		password = SQLInjection(password);
 
-			int rowsAffectedUser = DBUtil.execSQL(insert);
-			// Validate if insert is 1
-			if (rowsAffectedUser == 1) {
+		// Create and format SQL insert Statement
+		String insert = "INSERT INTO user(user_name, user_email, user_password, user_access, LAST_LOGIN) VALUES ('"
+				+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), '" + access + "', NOW())";
+
+		int rowsAffectedUser = DBUtil.execSQL(insert);
+		// Validate if insert is 1
+		if (rowsAffectedUser != 1) {
+			DBUtil.close();
+			return check;
+		}
+
+		FindAccount(email, password);
+		// adding to account types
+
+		String individualTable;
+		int rowsAffected;
+		String phoneNo;
+		String address;
+		String allegies;
+		String company;
+		int menu_id = 0;
+		switch (access) {
+
+		case "normal":
+			if (otherInfo.length != 3) {
+				break;
+			}
+
+			phoneNo = otherInfo[0];
+			allegies = otherInfo[1];
+			address = otherInfo[2];
+
+			phoneNo = SQLInjection(phoneNo);
+			allegies = SQLInjection(allegies);
+			address = SQLInjection(address);
+
+			individualTable = "INSERT INTO normal (normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
+					+ user_id + "' ," + phoneNo + ", '" + address + "', " + picture + ", '" + allegies + "');";
+
+			rowsAffected = DBUtil.execSQL(individualTable);
+
+			if (rowsAffected == 1) {
 				check = true;
 			}
 
-			FindAccount(email, password);
-			// adding to account types
+			break;
 
-			switch (access) {
-			case "normal":
-				int phoneNo = Helper.readInt("Enter phone number > ");
-				String allegies = Helper.readString("Enter Allegies > ");
-				allegies = SQLInjection(allegies);
-				String address = Helper.readString("Enter Address > ");
-				address = SQLInjection(address);
-				insert = "INSERT INTO normal(normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
-						+ user_id + "' ,'" + phoneNo + "'), '" + address + "'), " + picture + ", '" + allegies + "');";
+		case "vendor":
+			if (otherInfo.length != 3) {
 				break;
-			case "vendor":
-
-				break;
-			case "admin":
-
-				break;
-			default:
-
 			}
-if (access.equalsIgnoreCase("vendor")) {
-				int phoneNo = Helper.readInt("Enter phone number > ");
-				String address = Helper.readString("Enter Address > ");
-				address = SQLInjection(address);
-				String companyName = Helper.readString("Enter Company Name > ");
-				companyName = SQLInjection(companyName);
-				insert = "INSERT INTO vendor(vendor_id, vendor_phoneNumber, vendor_companyName, normal_profile, vendor_address, menu_id) VALUES ('"
-						+ user_id + "' ,'" + phoneNo + "'), '" + companyName + "'), " + picture + ", '" + address
-						+ "', '" + menu_id + "');";
 
-			} else if (access.equalsIgnoreCase("admin")) {
-				insert = "INSERT INTO admin(admin_id, admin_profile) VALUES ('" + getUser_id() + "' , '" + picture
-						+ "');";
+			company = otherInfo[0];
+			phoneNo = otherInfo[1];
+			address = otherInfo[2];
+
+			company = SQLInjection(company);
+			phoneNo = SQLInjection(phoneNo);
+			address = SQLInjection(address);
+
+			individualTable = "INSERT INTO vendor (vendor_id, vendor_phoneNumber, vendor_companyName, vendor_profile,  vendor_address, menu_id) VALUES ('"
+					+ user_id + "' ," + phoneNo + ", '" + company + "', '" + picture + "','" + address + "', " + menu_id
+					+ ");";
+
+			rowsAffected = DBUtil.execSQL(individualTable);
+
+			if (rowsAffected == 1) {
+				check = true;
 			}
+
+			break;
+		case "admin":
+			if (otherInfo != null) {
+				break;
+			}
+
+			individualTable = "INSERT INTO admin (admin_id, admin_profile) VALUES ('" + user_id + ",'" + picture
+					+ "');";
+
+			rowsAffected = DBUtil.execSQL(individualTable);
+
+			if (rowsAffected == 1) {
+				check = true;
+			}
+
+			break;
+		default:
+			//TODO
 		}
 
 		DBUtil.close();
 		return check;
 	}
 
+	
 	// ===============================
 	// Validating User Inputs
 	// (DONE - NEED CHECKING)

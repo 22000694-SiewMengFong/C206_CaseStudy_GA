@@ -20,7 +20,8 @@ import javafx.stage.Stage;
 
 public class NavBar {
 
-	private static Label app = new Label("GA APP");
+	private static final Label app = new Label("GA APP");
+	private static final int MAXWIDTH = 100;
 
 	@SuppressWarnings("exports")
 	public static HBox navBarStart(Stage primaryStage) {
@@ -32,6 +33,12 @@ public class NavBar {
 		Button btLogin = new Button("Login");
 		Button btRegister = new Button("Register");
 		Button btAboutSus = new Button("About Us");
+		
+		// Set max width of button
+		btMainPage.setMaxWidth(MAXWIDTH);
+		btLogin.setMaxWidth(MAXWIDTH);
+		btRegister.setMaxWidth(MAXWIDTH);
+		btAboutSus.setMaxWidth(MAXWIDTH);
 
 		// Adding Button, Separator and Spacer to ToolBar
 		toolbar.getItems().addAll(app, new Separator(), btMainPage, btLogin, btRegister, btAboutSus);

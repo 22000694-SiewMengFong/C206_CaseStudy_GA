@@ -9,14 +9,17 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class MainStart extends Application {
 
+	private BorderPane pane = new BorderPane();
+	
 	// Create Box by Entire screen, Main screen, button area
-	private HBox vbPaneEntire = new HBox();
+	private VBox vbTitle = new VBox();
 	private VBox vbPaneMain = new VBox();
 	private HBox hbPaneBt = new HBox();
 
@@ -63,12 +66,15 @@ public class MainStart extends Application {
 		vbPaneMain.setAlignment(Pos.CENTER);
 
 		lbAppTitleWelcome.setStyle(stylelb);
-		vbPaneMain.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk, hbPaneBt, lbReturn);
+		vbTitle.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk);
+		vbTitle.setAlignment(Pos.CENTER);
+		
+		vbPaneMain.getChildren().addAll(vbTitle, hbPaneBt, lbReturn);
 
-		// Add Nav bar followed by main screen
-		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
-
-		Scene mainScene = new Scene(vbPaneEntire);
+		pane.setCenter(vbPaneMain);
+		pane.setLeft(NavBar.navBarStart(primaryStage));
+		
+		Scene mainScene = new Scene(pane);
 
 		// Initialize stage
 		FXHelper.loadStage(primaryStage, mainScene, title, 600, 400);

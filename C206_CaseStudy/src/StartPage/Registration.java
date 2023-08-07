@@ -2,7 +2,6 @@ package StartPage;
 
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.ToggleGroup;
-import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -11,6 +10,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -19,22 +19,19 @@ import HelperPackage.Authentication;
 import HelperPackage.DBData;
 import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
-import javafx.scene.control.ToggleGroup;
 
-public class Registration extends Application {
+public class Registration {
 
 	// Create Box by Entire screen, Main screen, button area
 	private HBox vbPaneEntire = new HBox();
 	private VBox vbPaneMain = new VBox();
 	private VBox vbPaneNormal = new VBox();
-	private VBox vbPaneAdmin = new VBox();
-	private VBox vbPaneVendor = new VBox();
-	private VBox vbPaneAccountSelection = new VBox();
+
+	private VBox vbAllegies = new VBox();
 
 	private HBox hbPane = new HBox();
 
 	// Create label display to be displayed on top of GUI
-	private Label lbChoice1 = new Label("Choose An Account Type");
 	private Label lbRegister1 = new Label("Register an Account");
 	private Label lbRegister2 = new Label("Please enter your details to start");
 
@@ -60,10 +57,11 @@ public class Registration extends Application {
 	private static TextField tfAddress = new TextField();
 	private static TextField tfAllegies = new TextField();
 	private static TextField tfCompanyName = new TextField();
-	private RadioButton rbNormal = new RadioButton("Normal");
-	private RadioButton rbAdmin = new RadioButton("Admin");
-	private RadioButton rbVendor = new RadioButton("Vendor");
-	private Button btSelectAccess = new Button("Select Access Type");
+
+	private CheckBox cb1 = new CheckBox("Vegan");
+	private CheckBox cb2 = new CheckBox("Non Vegan");
+	private CheckBox cb3 = new CheckBox("Liquid Only");
+
 	// Create button to be clicked by user upon filling all textfield
 	private Button btCreate = new Button("Create Account");
 
@@ -73,62 +71,6 @@ public class Registration extends Application {
 	private String stylelb = "-fx-font: 20 arial;";
 	private static String responseError = "-fx-text-fill: red;";
 	private int MaxWidthTF = 200;
-
-	public static void main(String[] args) {
-		launch(args);
-	} // End of Main
-
-	// new method
-	private ToggleGroup accessTypeToggleGroup = new ToggleGroup();
-
-	@SuppressWarnings("exports")
-	public void Register(Stage primaryStage) {
-		// Add radio buttons to the toggle group
-		rbNormal.setToggleGroup(accessTypeToggleGroup);
-		rbAdmin.setToggleGroup(accessTypeToggleGroup);
-		rbVendor.setToggleGroup(accessTypeToggleGroup);
-
-		vbPaneAccountSelection.setAlignment(Pos.CENTER);
-		vbPaneAccountSelection.setSpacing(20);
-		vbPaneAccountSelection.getChildren().addAll(lbChoice1, rbNormal, rbAdmin, rbVendor, btSelectAccess);
-		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneAccountSelection);
-
-		Scene choices = new Scene(vbPaneMain);
-
-		FXHelper.loadStage(primaryStage, choices, title, 500, 500);
-
-		/*
-		 * // Set up the main scene for the registration form
-		 * vbPaneMain.setAlignment(Pos.CENTER); vbPaneMain.setSpacing(20);
-		 * vbPaneMain.getChildren().addAll(lbRegister1, lbRegister2); // Set default
-		 * selection to Normal rbNormal.setSelected(true);
-		 * 
-		 * // Add radio buttons and button to the main content area
-		 * vbPaneMain.getChildren().addAll(lbChoice1, rbNormal, rbAdmin, rbVendor,
-		 * btSelectAccess);
-		 */
-
-		EventHandler<ActionEvent> handleAccessSelection = (ActionEvent e) -> {
-			// Check if user has selected an access type
-			if (checkAccessType()) {
-				// Hide the main pane and display the corresponding access type pane
-				vbPaneMain.setVisible(false);
-				if (rbNormal.isSelected()) {
-					vbPaneNormal.setVisible(true);
-				} else if (rbAdmin.isSelected()) {
-					vbPaneAdmin.setVisible(true);
-				} else if (rbVendor.isSelected()) {
-					vbPaneVendor.setVisible(true);
-				}
-			}
-		};
-		btSelectAccess.setOnAction(handleAccessSelection);
-
-		Scene accountSelectionScene = new Scene(vbPaneAccountSelection, 500, 500);
-		primaryStage.setScene(accountSelectionScene);
-		primaryStage.setTitle("Account Type Selection");
-		primaryStage.show();
-	}
 
 	@SuppressWarnings("exports")
 	public void RegisterNormal(Stage primaryStage) {
@@ -147,9 +89,10 @@ public class Registration extends Application {
 		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
 		vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
 
+		vbAllegies.getChildren().addAll(cb1, cb2, cb3);
 		// Adding all the necessary elements to the main content area
 		vbPaneNormal.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPhoneNumber,
-				tfPhoneNumber, lbAllegies, tfAllegies, lbAddress, tfAddress, lbPassword1, tfPassword1, lbPassword2,
+				tfPhoneNumber, lbAllegies, vbAllegies, lbAddress, tfAddress, lbPassword1, tfPassword1, lbPassword2,
 				tfPassword2, lbCompanyName, tfCompanyName, btCreate, hbPane, lbRepsonse);
 
 		// Setting the maximum width for the text fields
@@ -159,7 +102,7 @@ public class Registration extends Application {
 		tfPassword2.setMaxWidth(MaxWidthTF);
 
 		// Adding the main content area and navigation bar to the entire horizontal box
-		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
+		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneNormal);
 
 		Scene register = new Scene(vbPaneEntire);
 
@@ -180,70 +123,10 @@ public class Registration extends Application {
 				String allegies = tfAllegies.getText();
 				String phoneNumber = tfPhoneNumber.getText();
 
-				String[] Data = { name, email, password, address, allegies, phoneNumber, };
-				// Check if access is create by checking if it is empty
-				DBData Credential = Authentication.CreateAccountNormal(Data);
-
-				String access_type = Credential.getUser_access();
-				if (Credential != null && access_type != null) {
-					primaryStage.close();
-					(new HomePage.NormalUser()).startCredential(Credential);
-				}
-			}
-
-		};
-		btCreate.setOnAction(handleResponse);
-
-	}
-
-	@SuppressWarnings("exports")
-	public void RegisterVendor(Stage primaryStage) {
-		// Setting up the horizontal box for button area
-		hbPane.setSpacing(10);
-		hbPane.setAlignment(Pos.BASELINE_CENTER);
-
-		// Styling the "Create Account" button
-		btCreate.setStyle(stylebt);
-
-		// Styling the "Register an Account" label
-		lbRegister1.setStyle(stylelb);
-
-		// Setting up the vertical box for the main content area
-		vbPaneMain.setSpacing(10);
-		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
-		vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
-
-		// Adding all the necessary elements to the main content area
-		vbPaneVendor.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPassword1,
-				tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse);
-
-		// Setting the maximum width for the text fields
-		tfName.setMaxWidth(MaxWidthTF);
-		tfEmail.setMaxWidth(MaxWidthTF);
-		tfPassword1.setMaxWidth(MaxWidthTF);
-		tfPassword2.setMaxWidth(MaxWidthTF);
-
-		// Adding the main content area and navigation bar to the entire horizontal box
-		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
-
-		Scene register = new Scene(vbPaneEntire);
-
-		// Initialize stage
-		FXHelper.loadStage(primaryStage, register, title, 500, 500);
-
-		// Add event for response
-		EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
-
-			// Check if user input is valid
-			if (checkFields() == true) {
-
-				// Inputs are collected and are stored within respective strings
-				String name = tfName.getText();
-				String email = tfEmail.getText();
-				String password = tfPassword1.getText();
+				String[] otherInfo = { phoneNumber, allegies, address };
 
 				// Check if access is create by checking if it is empty
-				DBData Credential = Authentication.CreateAccountVendor(name, email, password);
+				DBData Credential = Authentication.CreateAccountNormal(name, email, password, otherInfo);
 
 				String access_type = Credential.getUser_access();
 				if (Credential != null && access_type != null) {
@@ -274,9 +157,11 @@ public class Registration extends Application {
 		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
 		vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
 
+		vbAllegies.getChildren().addAll(cb1, cb2, cb3);
 		// Adding all the necessary elements to the main content area
-		vbPaneAdmin.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPassword1,
-				tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse);
+		vbPaneNormal.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPhoneNumber,
+				tfPhoneNumber, lbAllegies, vbAllegies, lbAddress, tfAddress, lbPassword1, tfPassword1, lbPassword2,
+				tfPassword2, lbCompanyName, tfCompanyName, btCreate, hbPane, lbRepsonse);
 
 		// Setting the maximum width for the text fields
 		tfName.setMaxWidth(MaxWidthTF);
@@ -285,7 +170,7 @@ public class Registration extends Application {
 		tfPassword2.setMaxWidth(MaxWidthTF);
 
 		// Adding the main content area and navigation bar to the entire horizontal box
-		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
+		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneNormal);
 
 		Scene register = new Scene(vbPaneEntire);
 
@@ -296,32 +181,33 @@ public class Registration extends Application {
 		EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {
 
 			// Check if user input is valid
-			if (checkFields() == true) {
+			if (checkFields() != true) {
+				return;
+			}
 
-				// Inputs are collected and are stored within respective strings
-				String name = tfName.getText();
-				String email = tfEmail.getText();
-				String password = tfPassword1.getText();
+			// Inputs are collected and are stored within respective strings
+			String name = tfName.getText();
+			String email = tfEmail.getText();
+			String password = tfPassword1.getText();
+			String address = tfAddress.getText();
+			String allegies = tfAllegies.getText();
+			String phoneNumber = tfPhoneNumber.getText();
 
-				// Check if access is create by checking if it is empty
-				DBData Credential = Authentication.CreateAccountAdmin(name, email, password);
+			String[] otherInfo = { phoneNumber, allegies, address };
 
-				String access_type = Credential.getUser_access();
-				if (Credential != null && access_type != null) {
-					primaryStage.close();
-					(new HomePage.NormalUser()).startCredential(Credential);
-				}
+			// Check if access is create by checking if it is empty
+			DBData Credential = Authentication.CreateAccountNormal(name, email, password, otherInfo);
+
+			String access_type = Credential.getUser_access();
+			if (Credential != null && access_type != null) {
+				primaryStage.close();
+				(new HomePage.NormalUser()).startCredential(Credential);
 			}
 
 		};
 		btCreate.setOnAction(handleResponse);
 
 	}
-
-	@SuppressWarnings("exports")
-	public void start(Stage primaryStage) {
-		(new MainStart()).start(new Stage());
-	} // End of Start
 
 	/**
 	 * Method return boolean value based on whether user input data is valid
@@ -446,16 +332,5 @@ public class Registration extends Application {
 		boolean matched = Pattern.matches(pattern, password);
 		return matched;
 	} // End of isPassword
-
-	private boolean checkAccessType() {
-		if (accessTypeToggleGroup.getSelectedToggle() == null) {
-			lbRepsonse.setText("Please select an access type (Normal, Admin, or Vendor).");
-			return false;
-		}
-
-		// Clear any previous error messages
-		lbRepsonse.setText("");
-		return true;
-	}
 
 }
