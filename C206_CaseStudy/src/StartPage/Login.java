@@ -34,8 +34,8 @@ public class Login extends Application {
 	private static Label lbRepsonse = new Label("");
 
 	// Create textfield to store user input data
-	private static TextField tfEmail = new TextField();
-	private static TextField tfPassword = new TextField();
+	private static TextField tfEmail = new TextField("user1@c.c");
+	private static TextField tfPassword = new TextField("user1");
 
 	// Create button for user to click to login
 	private Button btLogin = new Button("Login");
@@ -46,10 +46,6 @@ public class Login extends Application {
 	private String stylelb = "-fx-font: 20 arial;";
 	private static String responseError = "-fx-text-fill: red;";
 	private int MaxWidthTF = 200;
-
-	public static void main(String[] args) {
-		launch(args);
-	} // End of main
 
 	@SuppressWarnings("exports")
 	public void start(Stage primaryStage) {
@@ -93,13 +89,16 @@ public class Login extends Application {
 					
 					switch (access) {
 					case "normal":
-						ResponseReturn("Normal type");
+						primaryStage.close();
+						(new HomePage.NormalUser()).startCredential(Credential);
 						break;
 					case "vendor":
-						ResponseReturn("Vendor type");
+						primaryStage.close();
+						(new HomePage.VendorUser()).startCredential(new Stage(), Credential);
 						break;
 					case "admin":
-						ResponseReturn("Admin type");
+						primaryStage.close();
+						(new HomePage.AdminUser()).startCredential(new Stage(), Credential);
 						break;
 					default:
 						ResponseReturn("Something went wrong. Authentication failed.");

@@ -24,6 +24,53 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `item`
+--
+
+CREATE TABLE `item` (
+  `item_id` int(10) NOT NULL,
+  `item_name` varchar(100) NOT NULL,
+  `item_qty` int(10) NOT NULL,
+  `item_description` varchar(300) NOT NULL,
+  `item_dietary` varchar(300) DEFAULT NULL,
+  `item_ingredients` varchar(300) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
+
+--
+-- Dumping data for table `item`
+--
+
+INSERT INTO `item` (`item_id`, `item_name`, `item_qty`, `item_description`, `item_dietary`, `item_ingredients`) VALUES
+(0, 'banana', 5, 'It is a banana, very long, yellow, shaped like a long banana', 'NIL', 'Fruit, Tree'),
+(1, 'apple', 1, 'It is a apple, red, not shaped like a long banana', 'NIL', 'Fruit, Tree'),
+(2, 'milk', 0, 'It is a liquid, white liquid, sweet, a bit thick, comes from an animal', 'Dairy, NON Vegan', 'Cow'),
+(3, 'water', 20, 'Water H2O, what else can it be?', 'NIL', 'H2O Basic building blocks of life'),
+(4, 'banana milk', 4, 'It is a yellow liquid, taste like a banana while being thick like milk', 'Dairy, NON Vegan', 'Cow, Fruit, Tree'),
+(5, 'apple milk', 10, 'It is a liquid, taste like a apple while being thick like milk', 'Dairy, NON Vegan', 'Cow, Fruit, Tree'),
+(6, 'chicken', 3, 'It comes from a chicken or an egg? Hmm', 'Poultry, NON Vegan', 'Chicken'),
+(7, 'beef', 50, 'Beef u got beef with something?', 'Red Meat, NON Vegan', 'Cow');
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `item`
+--
+ALTER TABLE `item`
+  ADD PRIMARY KEY (`item_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `user`
+--
+ALTER TABLE `item`
+  MODIFY `item_id` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+COMMIT;
+
+--
 -- Table structure for table `user`
 --
 
@@ -33,22 +80,23 @@ CREATE TABLE `user` (
   `user_email` varchar(100) NOT NULL,
   `user_password` varchar(100) NOT NULL,
   `user_picture` varchar(100) DEFAULT NULL,
-  `user_access` varchar(50) NOT NULL
+  `user_access` varchar(50) NOT NULL,
+  `LAST_LOGIN` datetime(6) NOT Null
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 COLLATE=latin1_swedish_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`user_id`, `user_name`, `user_email`, `user_password`, `user_picture`, `user_access`) VALUES
-(0, 'user1', 'user1@c.c', SHA1('user1'), 'user.png', 'normal'),
-(1, 'user2', 'user2@c.c', SHA1('user2'), 'user.png', 'normal'),
-(2, 'user3', 'user3@c.c', SHA1('user3'), 'user.png', 'normal'),
-(3, 'user4', 'user4@c.c', SHA1('user4'), 'user.png', 'normal'),
-(4, 'admim1', 'admin1@c.c', SHA1('admin1'), 'admin.png', 'admin'),
-(5, 'admim2', 'admin2@c.c', SHA1('admin2'), 'admin.png', 'admin'),
-(6, 'vendor1', 'vendor1@c.c', SHA1('vendor1'), 'vendor.png', 'vendor'),
-(7, 'vendor2', 'vendor2@c.c', SHA1('vendor2'), 'vendor.png', 'vendor');
+INSERT INTO `user` (`user_id`, `user_name`, `user_email`, `user_password`, `user_picture`, `user_access`, `LAST_LOGIN`) VALUES
+(0, 'user1', 'user1@c.c', SHA1('user1'), 'user.png', 'normal', NOW()),
+(1, 'user2', 'user2@c.c', SHA1('user2'), 'user.png', 'normal', NOW()),
+(2, 'user3', 'user3@c.c', SHA1('user3'), 'user.png', 'normal', NOW()),
+(3, 'user4', 'user4@c.c', SHA1('user4'), 'user.png', 'normal', NOW()),
+(4, 'admim1', 'admin1@c.c', SHA1('admin1'), 'admin.png', 'admin', NOW()),
+(5, 'admim2', 'admin2@c.c', SHA1('admin2'), 'admin.png', 'admin', NOW()),
+(6, 'vendor1', 'vendor1@c.c', SHA1('vendor1'), 'vendor.png', 'vendor', NOW()),
+(7, 'vendor2', 'vendor2@c.c', SHA1('vendor2'), 'vendor.png', 'vendor', NOW());
 --
 -- Indexes for dumped tables
 --

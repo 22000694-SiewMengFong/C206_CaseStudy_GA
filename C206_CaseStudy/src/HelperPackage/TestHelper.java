@@ -6,7 +6,7 @@ import java.sql.SQLException;
 public class TestHelper {
 
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+		
 
 		String jdbcURL = "jdbc:mysql://localhost/c206_ga";
 		String dbUsername = "root";

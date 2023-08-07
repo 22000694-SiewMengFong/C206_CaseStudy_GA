@@ -10,9 +10,9 @@ public class DBData {
 	private static String dbUsername = "root";
 	private static String dbPassword = "";
 
-	private String user_access;
-	private String user_id;
-	private String user_name;
+	private static String user_access;
+	private static String user_id;
+	private static String user_name;
 	private String user_picture;
 
 	/**
@@ -24,10 +24,9 @@ public class DBData {
 	 * @param user_name
 	 * @param user_picture
 	 */
-	public DBData(String email, String password, String access, String name, String picture) {
-		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+	public DBData(String email, String password, String access, String name, String picture, String[] otherInfo) {
 
-		boolean check = AddAccountDB(email, password, access, name, picture);
+		boolean check = AddAccountDB(email, password, access, name, picture, otherInfo);
 		if (check == false) {
 			user_id = null;
 			user_access = null;
@@ -58,7 +57,6 @@ public class DBData {
 		user_picture = data[3];
 	}
 
-	// TODO NOT YET
 	public void setUser_picture(String user_picture) {
 		this.user_picture = user_picture;
 	}
@@ -89,8 +87,8 @@ public class DBData {
 
 		String[] data = new String[4];
 
-		String select = "SELECT user_access, user_id, user_name, user_picture FROM `user` WHERE `user_email` = '"
-				+ email + "' AND `user_password` = SHA1('" + password + "');";
+		String select = "SELECT user_access, user_id, user_name, user_picture FROM `user` WHERE `user_email` = SHA1('"
+				+ email + "') AND `user_password` = SHA1('" + password + "');";
 
 		ResultSet rs = DBUtil.getTable(select);
 
@@ -101,6 +99,15 @@ public class DBData {
 					data[1] = rs.getString("user_access");
 					data[2] = rs.getString("user_name");
 					data[3] = rs.getString("user_picture");
+
+					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
+					int rowsAffected = DBUtil.execSQL(updateSQL);
+
+					// Set data null if update of Last Login fails
+					if (rowsAffected != 1) {
+						data = null;
+					}
+
 					break;
 				}
 			} else {
@@ -115,36 +122,119 @@ public class DBData {
 		return data;
 	}
 
-	private static boolean AddAccountDB(String email, String password, String access, String name, String picture) {
-		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+	private static boolean AddAccountDB(String email, String password, String access, String name, String picture,
+			String[] otherInfo) {
 
 		// Return Check
 		boolean check = false;
 
 		// Check if email exist in db
-		if (CheckEmailDB(email) == false) {
+		if (CheckEmailDB(email) == true) {
+			return check;
+		}
 
-			// Prevent SQL injection
-			email = SQLInjection(email);
-			name = SQLInjection(name);
-			password = SQLInjection(password);
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 
-			// Create and format SQL insert Statement
-			String insert = "INSERT INTO user(user_name, user_email, user_password, user_picture, user_access) VALUES ('"
-					+ name + "' , '" + email + "', SHA1('" + password + "'), " + picture + ", '" + access + "')";
+		// Prevent SQL injection
+		email = SQLInjection(email);
+		name = SQLInjection(name);
+		password = SQLInjection(password);
 
-			int rowsAffected = DBUtil.execSQL(insert);
+		// Create and format SQL insert Statement
+		String insert = "INSERT INTO user(user_name, user_email, user_password, user_access, LAST_LOGIN) VALUES ('"
+				+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), '" + access + "', NOW())";
 
-			// Validate if insert is 1
+		int rowsAffectedUser = DBUtil.execSQL(insert);
+		// Validate if insert is 1
+		if (rowsAffectedUser != 1) {
+			DBUtil.close();
+			return check;
+		}
+
+		FindAccount(email, password);
+		// adding to account types
+
+		String individualTable;
+		int rowsAffected;
+		String phoneNo;
+		String address;
+		String allegies;
+		String company;
+		int menu_id = 0;
+		switch (access) {
+
+		case "normal":
+			if (otherInfo.length != 3) {
+				break;
+			}
+
+			phoneNo = otherInfo[0];
+			allegies = otherInfo[1];
+			address = otherInfo[2];
+
+			phoneNo = SQLInjection(phoneNo);
+			allegies = SQLInjection(allegies);
+			address = SQLInjection(address);
+
+			individualTable = "INSERT INTO normal (normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
+					+ user_id + "' ," + phoneNo + ", '" + address + "', " + picture + ", '" + allegies + "');";
+
+			rowsAffected = DBUtil.execSQL(individualTable);
+
 			if (rowsAffected == 1) {
 				check = true;
 			}
+
+			break;
+
+		case "vendor":
+			if (otherInfo.length != 3) {
+				break;
+			}
+
+			company = otherInfo[0];
+			phoneNo = otherInfo[1];
+			address = otherInfo[2];
+
+			company = SQLInjection(company);
+			phoneNo = SQLInjection(phoneNo);
+			address = SQLInjection(address);
+
+			individualTable = "INSERT INTO vendor (vendor_id, vendor_phoneNumber, vendor_companyName, vendor_profile,  vendor_address, menu_id) VALUES ('"
+					+ user_id + "' ," + phoneNo + ", '" + company + "', '" + picture + "','" + address + "', " + menu_id
+					+ ");";
+
+			rowsAffected = DBUtil.execSQL(individualTable);
+
+			if (rowsAffected == 1) {
+				check = true;
+			}
+
+			break;
+		case "admin":
+			if (otherInfo != null) {
+				break;
+			}
+
+			individualTable = "INSERT INTO admin (admin_id, admin_profile) VALUES ('" + user_id + ",'" + picture
+					+ "');";
+
+			rowsAffected = DBUtil.execSQL(individualTable);
+
+			if (rowsAffected == 1) {
+				check = true;
+			}
+
+			break;
+		default:
+			//TODO
 		}
 
 		DBUtil.close();
 		return check;
 	}
 
+	
 	// ===============================
 	// Validating User Inputs
 	// (DONE - NEED CHECKING)
@@ -176,20 +266,19 @@ public class DBData {
 
 		// Create and format SQL select Statement
 
-		String select = "SELECT user_email FROM user";
+		String select = "SELECT user_email FROM user WHERE `user_email` = SHA1('" + email + "');";
 
 		ResultSet rs = DBUtil.getTable(select);
 		// Getting all the email from the SQL database and comparing it to the input
-		try {
-			while (rs.next()) {
-				String sqlEmail = rs.getString("user_email");
-				if (sqlEmail.equals(email)) {
+		// if rs = null - no result
+		if (rs != null) {
+			try {
+				while (rs.next()) {
 					check = true;
-					break;
 				}
+			} catch (SQLException e) {
+				e.printStackTrace();
 			}
-		} catch (SQLException e) {
-			e.printStackTrace();
 		}
 
 		DBUtil.close();
