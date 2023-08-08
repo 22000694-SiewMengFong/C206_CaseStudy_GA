@@ -163,15 +163,19 @@ public class DBData {
 						data[4] = rsAdmin.getString("admin_profile");
 						break;
 					}
-					// update last login
-					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
-					int rowsAffected = DBUtil.execSQL(updateSQL);
-					// Set data null if update of Last Login fails
-					if (rowsAffected != 1) {
-						data = null;
-					}
-					break;
+				default:
+					return data = null;
 				}
+				
+				// update last login
+				String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
+				int rowsAffected = DBUtil.execSQL(updateSQL);
+				
+				// Set data null if update of Last Login fails
+				if (rowsAffected != 1) {
+					data = null;
+				}
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -202,15 +206,15 @@ public class DBData {
 		// Create and format SQL insert Statement
 		String insert = "INSERT INTO user(user_name, user_email, user_password, ACCESS_TYPE, LAST_LOGIN) VALUES ('"
 				+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), '" + access + "', NOW())";
-		
+
 		int rowsAffectedUser = DBUtil.execSQL(insert);
 		// Validate if insert is 1
 		if (rowsAffectedUser != 1) {
 			DBUtil.close();
 			return check;
 		}
-		
-		//Getting UserId
+
+		// Getting UserId
 		String select = "SELECT user_id FROM user WHERE user_email = SHA1('" + email + "');";
 		ResultSet rs = DBUtil.getTable(select);
 		try {
@@ -221,7 +225,7 @@ public class DBData {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		FindAccount(email, password);
 		// adding to account types
 
@@ -248,8 +252,7 @@ public class DBData {
 			address = SQLInjection(address);
 
 			individualTable = "INSERT INTO normal (normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
-                    + user_id + "' ," + phoneNo + ", '" + address + "',  'user.png' , '" + allegies + "');";
-
+					+ user_id + "' ," + phoneNo + ", '" + address + "',  'user.png' , '" + allegies + "');";
 
 			rowsAffected = DBUtil.execSQL(individualTable);
 

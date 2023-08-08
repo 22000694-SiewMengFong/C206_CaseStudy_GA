@@ -55,12 +55,10 @@ public class NormalUser extends Application {
 	private String stylelb = "-fx-font: 20 arial;";
 	private int MaxWidthTF = 200;
 
-	/*
-	 * 
-	 * public static void main(String[] args) { launch(args); } // End of main
-	 * 
-	 */
-
+	public static void main(String[] args) {
+		launch(args);
+	} // End of main
+	
 	public void startCredential(DBData Credential) {
 		credential = Credential;
 		start(new Stage());
