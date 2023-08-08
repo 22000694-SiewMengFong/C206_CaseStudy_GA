@@ -15,6 +15,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 //TODO Link user to HomePage base on their user_access type (NOT YET)
@@ -22,7 +23,8 @@ import javafx.stage.Stage;
 public class Login extends Application {
 
 	// Create Box by Entire screen, Main screen, button area
-	private HBox vbPaneEntire = new HBox();
+	private BorderPane bpPane = new BorderPane();
+	// private HBox vbPaneEntire = new HBox();
 	private VBox vbPaneMain = new VBox();
 	private HBox hbPane = new HBox();
 
@@ -34,8 +36,8 @@ public class Login extends Application {
 	private static Label lbRepsonse = new Label("");
 
 	// Create textfield to store user input data
-	private static TextField tfEmail = new TextField("user1@c.c");
-	private static TextField tfPassword = new TextField("user1");
+	private static TextField tfEmail = new TextField("normal1@normal1");
+	private static TextField tfPassword = new TextField("normal1");
 
 	// Create button for user to click to login
 	private Button btLogin = new Button("Login");
@@ -62,15 +64,17 @@ public class Login extends Application {
 		// Setting up the vertical box for the main content area
 		vbPaneMain.setSpacing(10);
 		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
-		vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
+		vbPaneMain.setAlignment(Pos.CENTER);
 		vbPaneMain.getChildren().addAll(lbLogin1, lbLogin2, lbEmail, tfEmail, lbPassword, tfPassword, btLogin, hbPane,
 				lbRepsonse);
 		tfEmail.setMaxWidth(MaxWidthTF);
 		tfPassword.setMaxWidth(MaxWidthTF);
 
 		// Adding the main content area and navigation bar to the entire horizontal box
-		vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), vbPaneMain);
-		Scene login = new Scene(vbPaneEntire);
+		bpPane.setLeft(NavBar.navBarStart(primaryStage));
+		bpPane.setCenter(vbPaneMain);
+
+		Scene login = new Scene(bpPane);
 
 		// Initialize stage
 		FXHelper.loadStage(primaryStage, login, title);
@@ -86,7 +90,7 @@ public class Login extends Application {
 				if (Credential != null && Credential.getUser_id() != null) {
 
 					String access = Credential.getUser_access();
-					
+
 					switch (access) {
 					case "normal":
 						primaryStage.close();
@@ -94,15 +98,15 @@ public class Login extends Application {
 						break;
 					case "vendor":
 						primaryStage.close();
-						(new HomePage.VendorUser()).startCredential(new Stage(), Credential);
+						(new HomePage.VendorUser()).startCredential(Credential);
 						break;
 					case "admin":
 						primaryStage.close();
-						(new HomePage.AdminUser()).startCredential(new Stage(), Credential);
+						(new HomePage.AdminUser()).startCredential(Credential);
 						break;
 					default:
 						ResponseReturn("Something went wrong. Authentication failed.");
-						
+
 					}
 				} else {
 					ResponseReturn("Email or Password is invalid. Try Again.");

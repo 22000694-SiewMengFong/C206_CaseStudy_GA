@@ -75,10 +75,10 @@ public class AboutUs extends Application {
 			// Sus things
 			String[] url = {"sus1.jpg", "sus2.jpeg", "sus3.jpeg", "sus4.png"};
 			Random rand = new Random();
-			int randomN = rand.nextInt(10);
+			int randomN = rand.nextInt(10000);
 			int num = Integer.parseInt(lbRepsonse.getText());
 			lbRepsonse.setText(String.valueOf(num + 1));
-			if (randomN == 2) {
+			if (randomN == 126) {
 				int randomX = (rand.nextInt(url.length));
 				String urlFound = String.format("file:UserProfiles/%s", url[randomX]);
 				Image img = new Image(urlFound, 300, 300, false, false);

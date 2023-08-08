@@ -5,6 +5,7 @@ import HelperPackage.NavBar;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.scene.image.ImageView;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -22,14 +23,17 @@ public class MainStart extends Application {
 	private VBox vbTitle = new VBox();
 	private VBox vbPaneMain = new VBox();
 	private HBox hbPaneBt = new HBox();
+	
+	//Create ImageView of Logo
+	private ImageView LOGO = new ImageView("file:UserProfiles\\Logo.png");
 
 	// Create button to put in hbPaneBt
 	private Button btLogin = new Button("Login");
 	private Button btRegister = new Button("Register");
 
 	// Creates label to put in Main screen
-	private Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
-	private Label lbAppTitleAsk = new Label("Please login/register to start");
+	//private Label lbAppTitleWelcome = new Label("Welcome to the GAy App!");
+	private Label lbAppTitleAsk = new Label("Please login/register to start!");
 	private Label lbReturn = new Label("");
 	
 	// Basic setting of the class
@@ -65,9 +69,11 @@ public class MainStart extends Application {
 		vbPaneMain.setSpacing(10);
 		vbPaneMain.setAlignment(Pos.CENTER);
 
-		lbAppTitleWelcome.setStyle(stylelb);
-		vbTitle.getChildren().addAll(lbAppTitleWelcome, lbAppTitleAsk);
+		LOGO.setFitWidth(200);
+		LOGO.setFitHeight(200);
+		vbTitle.getChildren().addAll(LOGO, lbAppTitleAsk);
 		vbTitle.setAlignment(Pos.CENTER);
+		vbTitle.setSpacing(5);
 		
 		vbPaneMain.getChildren().addAll(vbTitle, hbPaneBt, lbReturn);
 

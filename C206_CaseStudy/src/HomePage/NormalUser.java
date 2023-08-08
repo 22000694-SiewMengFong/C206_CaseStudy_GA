@@ -5,6 +5,8 @@ import HelperPackage.FXHelper;
 import HelperPackage.NavBar;
 import StartPage.MainStart;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -13,14 +15,15 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class NormalUser extends Application {
-	
+
 	private static DBData credential;
-	
+
 	// Create Box by Entire screen, Main screen, button area
-	private HBox vbPaneEntire = new HBox();
+	private BorderPane bpPane = new BorderPane();
 	private VBox vbPaneMain = new VBox();
 	private HBox hbPane = new HBox();
 
@@ -47,33 +50,34 @@ public class NormalUser extends Application {
 	private Button btCreate = new Button("Create Account");
 
 	// Basic setting of the class
-	private String title = "Registration Window";
+	private String title = "Parent Window";
 	private String stylebt = "-fx-background-color: blue; -fx-text-fill: white;";
 	private String stylelb = "-fx-font: 20 arial;";
 	private int MaxWidthTF = 200;
-	
-	
-	public static void main(String[] args) {
-		launch(args);
-	} // End of main
+
+	/*
+	 * 
+	 * public static void main(String[] args) { launch(args); } // End of main
+	 * 
+	 */
 
 	public void startCredential(DBData Credential) {
 		credential = Credential;
 		start(new Stage());
 	}
-	
+
 	@SuppressWarnings("exports")
 	public void start(Stage primaryStage) {
-		//System.out.println(credential.getUser_access());
+		credential = new DBData("normal1@normal1", "normal1");
 		if (credential == null) {
-			String error ="No Credential Found While Logging In";
+			String error = "No Credential Found While Logging In";
 			(new MainStart()).startReturn(error);
 			return;
 		}
-		
+
 		// Setting up the horizontal box for button area
 		hbPane.setSpacing(10);
-		hbPane.setAlignment(Pos.BASELINE_CENTER);
+		hbPane.setAlignment(Pos.CENTER);
 
 		// Styling the "Create Account" button
 		btCreate.setStyle(stylebt);
@@ -84,7 +88,7 @@ public class NormalUser extends Application {
 		// Setting up the vertical box for the main content area
 		vbPaneMain.setSpacing(10);
 		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
-		vbPaneMain.setAlignment(Pos.BASELINE_CENTER);
+		vbPaneMain.setAlignment(Pos.CENTER);
 
 		// Adding all the necessary elements to the main content area
 		vbPaneMain.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPassword1,
@@ -97,15 +101,30 @@ public class NormalUser extends Application {
 		tfPassword2.setMaxWidth(MaxWidthTF);
 
 		// Adding the main content area and navigation bar to the entire horizontal box
-		vbPaneEntire.getChildren().addAll(NavBar.navBarHomeNormal(primaryStage), vbPaneMain);
+		bpPane.setLeft(NavBar.navBarHomeNormal(primaryStage));
+		bpPane.setCenter(vbPaneMain);
 
-		Scene register = new Scene(vbPaneEntire);
+		Scene register = new Scene(bpPane);
 
 		// Initialize stage
 		FXHelper.loadStage(primaryStage, register, title, 500, 500);
 
 		// Add event for response
+	}
+
+	@SuppressWarnings("exports")
+	public void PlaceOrder(Stage primaryStage) {
 
 	}
-	
+
+	@SuppressWarnings("exports")
+	public void TrackOrder(Stage primaryStage) {
+
+	}
+
+	@SuppressWarnings("exports")
+	public void Setting(Stage primaryStage) {
+
+	}
+
 }

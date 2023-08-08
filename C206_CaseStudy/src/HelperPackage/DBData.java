@@ -14,6 +14,7 @@ public class DBData {
 	private static String user_id;
 	private static String user_name;
 	private String user_picture;
+	private static String user_email;
 
 	/**
 	 * Creates Account
@@ -37,9 +38,11 @@ public class DBData {
 		String[] data = FindAccount(email, password);
 
 		user_id = data[0];
-		user_access = data[1];
-		user_name = data[2];
-		user_picture = data[3];
+		user_name = data[1];
+		user_email = data[2];
+		user_access = data[3];
+		user_picture = data[4];
+
 	}
 
 	/**
@@ -52,9 +55,10 @@ public class DBData {
 		String[] data = FindAccount(email, password);
 
 		user_id = data[0];
-		user_access = data[1];
-		user_name = data[2];
-		user_picture = data[3];
+		user_name = data[1];
+		user_email = data[2];
+		user_access = data[3];
+		user_picture = data[4];
 	}
 
 	public void setUser_picture(String user_picture) {
@@ -77,6 +81,44 @@ public class DBData {
 		return user_picture;
 	}
 
+	public String getUser_email() {
+		return user_email;
+	}
+
+	public String getMenuCount() {
+		String count = Integer.toString(getMenuCountSQL());
+		return count;
+	}
+
+	public String getNormalCount() {
+		String count = Integer.toString(getNormalCountSQL());
+		return count;
+	}
+
+	public String getVendorCount() {
+		String count = Integer.toString(getVendorCountSQL());
+		return count;
+	}
+
+	public String getUserCount() {
+		String count = Integer.toString(getUserCountSQL());
+		return count;
+	}
+
+	public String getItemCount() {
+		String count = Integer.toString(getItemCountSQL());
+		return count;
+	}
+
+	public String getOrderCount() {
+		String count = Integer.toString(getOrderCountSQL());
+		return count;
+	}
+
+	public String getAllOrderDetail() {
+		String data = getAllOrderDetailSQL();
+		return data;
+	}
 	// ===============================
 	// Find and Add Account in DB
 	// (DONE - NEED CHECKING)
@@ -84,34 +126,52 @@ public class DBData {
 
 	private static String[] FindAccount(String email, String password) {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
-
-		String[] data = new String[4];
-
-		String select = "SELECT user_access, user_id, user_name, user_picture FROM `user` WHERE `user_email` = SHA1('"
-				+ email + "') AND `user_password` = SHA1('" + password + "');";
+		// connecting to DB and storing info
+		String[] data = new String[6];
+		String select = "SELECT * FROM user WHERE user_email = SHA1('" + email + "') AND user_password = SHA1('"
+				+ password + "');";
 
 		ResultSet rs = DBUtil.getTable(select);
-
 		try {
-			if (rs != null) {
-				while (rs.next()) {
-					data[0] = rs.getString("user_id");
-					data[1] = rs.getString("user_access");
-					data[2] = rs.getString("user_name");
-					data[3] = rs.getString("user_picture");
+			while (rs.next()) {
+				data[0] = rs.getString("user_id");
+				data[1] = rs.getString("user_name");
+				data[2] = rs.getString("user_email");
+				data[3] = rs.getString("ACCESS_TYPE");
 
+				// Determine access type > access_type data
+				switch (data[3]) {
+				case "normal":
+					String selectNormal = "SELECT normal_profile FROM normal WHERE normal_id = '" + data[0] + "'";
+					ResultSet rsNormal = DBUtil.getTable(selectNormal);
+					while (rsNormal.next()) {
+						data[4] = rsNormal.getString("normal_profile");
+					}
+					break;
+				case "vendor":
+					String selectVendor = "SELECT * FROM vendor WHERE vendor_id = '" + data[0] + "'";
+					ResultSet rsVendor = DBUtil.getTable(selectVendor);
+					while (rsVendor.next()) {
+						data[4] = rsVendor.getString("vendor_profile");
+						data[5] = rsVendor.getString("menu_id");
+					}
+					break;
+				case "admin":
+					String selectAdmin = "SELECT * FROM admin WHERE admin_id = '" + data[0] + "'";
+					ResultSet rsAdmin = DBUtil.getTable(selectAdmin);
+					while (rsAdmin.next()) {
+						data[4] = rsAdmin.getString("admin_profile");
+						break;
+					}
+					// update last login
 					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
 					int rowsAffected = DBUtil.execSQL(updateSQL);
-
 					// Set data null if update of Last Login fails
 					if (rowsAffected != 1) {
 						data = null;
 					}
-
 					break;
 				}
-			} else {
-				data = null;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -139,18 +199,29 @@ public class DBData {
 		email = SQLInjection(email);
 		name = SQLInjection(name);
 		password = SQLInjection(password);
-
 		// Create and format SQL insert Statement
-		String insert = "INSERT INTO user(user_name, user_email, user_password, user_access, LAST_LOGIN) VALUES ('"
+		String insert = "INSERT INTO user(user_name, user_email, user_password, ACCESS_TYPE, LAST_LOGIN) VALUES ('"
 				+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), '" + access + "', NOW())";
-
+		
 		int rowsAffectedUser = DBUtil.execSQL(insert);
 		// Validate if insert is 1
 		if (rowsAffectedUser != 1) {
 			DBUtil.close();
 			return check;
 		}
-
+		
+		//Getting UserId
+		String select = "SELECT user_id FROM user WHERE user_email = SHA1('" + email + "');";
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				user_id = rs.getString("user_id");
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		FindAccount(email, password);
 		// adding to account types
 
@@ -177,7 +248,8 @@ public class DBData {
 			address = SQLInjection(address);
 
 			individualTable = "INSERT INTO normal (normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
-					+ user_id + "' ," + phoneNo + ", '" + address + "', " + picture + ", '" + allegies + "');";
+                    + user_id + "' ," + phoneNo + ", '" + address + "',  'user.png' , '" + allegies + "');";
+
 
 			rowsAffected = DBUtil.execSQL(individualTable);
 
@@ -227,14 +299,13 @@ public class DBData {
 
 			break;
 		default:
-			//TODO
+			// TODO
 		}
 
 		DBUtil.close();
 		return check;
 	}
 
-	
 	// ===============================
 	// Validating User Inputs
 	// (DONE - NEED CHECKING)
@@ -271,17 +342,144 @@ public class DBData {
 		ResultSet rs = DBUtil.getTable(select);
 		// Getting all the email from the SQL database and comparing it to the input
 		// if rs = null - no result
-		if (rs != null) {
-			try {
-				while (rs.next()) {
-					check = true;
-				}
-			} catch (SQLException e) {
-				e.printStackTrace();
+		try {
+			while (rs.next()) {
+				check = true;
 			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 
 		DBUtil.close();
 		return check;
 	} // End of CheckEmailDB
+
+	private static int getMenuCountSQL() {
+		int count = 0;
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT menu_id FROM menu_item;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				count++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private static int getNormalCountSQL() {
+		int count = 0;
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT normal_id FROM normal;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				count++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private static int getUserCountSQL() {
+		int count = 0;
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT user_id FROM user;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				count++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private static int getVendorCountSQL() {
+		int count = 0;
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT vendor_id FROM vendor;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				count++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private static int getItemCountSQL() {
+		// todo
+		int count = 0;
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT item_id FROM item;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				count++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private static int getOrderCountSQL() {
+		int count = 0;
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT order_id FROM has_order;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		try {
+			while (rs.next()) {
+				count++;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return count;
+	}
+
+	private static String getAllOrderDetailSQL() {
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT DISTINCT * FROM has_order;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		String output = String.format("%-10s %10s %-10s %10s %-10 %10", "USER ID", "USER NAME", "ORDER ID",
+				"ORDER STATUS", "PREFERENCE", "MENU ID");
+		try {
+			while (rs.next()) {
+				String[] order = {};
+
+				order[0] = rs.getString("order_id");
+				order[1] = rs.getString("order_status");
+				order[2] = rs.getString("preference");
+				order[3] = rs.getString("normal_id");
+				order[4] = rs.getString("menu_id");
+
+				select = "SELECT user_name FROM user WHERE user_id = '" + order[4] + "';";
+				ResultSet rs1 = DBUtil.getTable(select);
+				while (rs.next()) {
+					order[5] = rs1.getString("user_name");
+					output += String.format("\n%-10s %10s %-10s %10s %-10 %10", order[0], order[1], order[2], order[3],
+							order[4], order[5]);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return output;
+
+	}
 }

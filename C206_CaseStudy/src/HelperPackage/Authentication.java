@@ -35,7 +35,6 @@ public class Authentication {
 	 * @return
 	 */
 	public static DBData CreateAccountNormal(String name, String email, String password, String[] otherInfo) {
-
 		String access = "normal";
 
 		// Create normal account
@@ -77,6 +76,7 @@ public class Authentication {
 		String access = "admin";
 		
 		String[] otherInfo = null;
+		
 		// Create admin account
 		DBData Credential = CreateAccount(name, email, password, access, otherInfo);
 
