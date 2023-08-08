@@ -9,6 +9,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
@@ -62,8 +63,6 @@ public class AdminUser extends Application {
 			(new MainStart()).startReturn(error);
 			return;
 		}
-		System.out.println("HI");
-
 		// Setting up the vertical box for the main content area
 		vbPaneMain.setSpacing(10);
 		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
@@ -77,11 +76,18 @@ public class AdminUser extends Application {
 				totalNormal, lborderUser, totalUser);
 
 		// Setting the maximum width for the text fields and disable editing
-		totalMenu.setDisable(true);
-		totalNormal.setDisable(true);
-		totalVendor.setDisable(true);
-		totalUser.setDisable(true);
+		totalMenu.setDisable(false);
+		totalMenu.setEditable(false);
 
+		totalNormal.setDisable(false);
+		totalNormal.setEditable(false);
+
+		totalVendor.setDisable(false);
+		totalVendor.setEditable(false);
+		
+		totalUser.setDisable(false);
+		totalUser.setEditable(false);
+		
 		totalMenu.setMaxWidth(MaxWidthTF);
 		totalNormal.setMaxWidth(MaxWidthTF);
 		totalVendor.setMaxWidth(MaxWidthTF);
@@ -105,11 +111,52 @@ public class AdminUser extends Application {
 		// Add event for response
 	}
 
-	// Fields for TrackOrder
+	// Creating Fields for TrackOrder
+	private Label lborderOrder = new Label("All Order Status: ");
+	private TextArea taOrderStatus = new TextArea();
 
 	@SuppressWarnings("exports")
 	public void TrackOrder(Stage primaryStage) {
+		// Setting new title & getting information
+		title = "Track Order Status";
+		lborderTitle.setText("Track Order Status Menu");
 
+		// Setting up the vertical box for the main content area
+		vbPaneMain.setSpacing(10);
+		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
+		vbPaneMain.setAlignment(Pos.CENTER);
+
+		// Styling the "System Overview" label
+		lborderTitle.setText("Track Order Status Menu");
+		lborderTitle.setStyle(stylelb);
+
+		// Adding all the necessary elements to the main content area
+		vbPaneMain.getChildren().addAll(lborderTitle, lborderOrder, taOrderStatus);
+
+		// Setting the maximum width for the text fields and disable editing
+		taOrderStatus.setDisable(false);
+		taOrderStatus.setEditable(false);
+
+		taOrderStatus.setMaxWidth(MaxWidthTF);
+
+		taOrderStatus.prefWidth(35);
+		taOrderStatus.prefHeight(30);
+		taOrderStatus.setMaxWidth(999);
+		taOrderStatus.setMaxHeight(999);
+		// Fill TextField
+		String data[][] = credential.getAllOrderDetail();
+		taOrderStatus.setText(FXHelper.tableFormatter(data) + "\n" + taOrderStatus.getText());
+
+		// Adding the main content area and navigation bar to the entire horizontal box
+		bpPane.setLeft(NavBar.navBarHomeAdmin(primaryStage));
+		bpPane.setCenter(vbPaneMain);
+
+		Scene register = new Scene(bpPane);
+
+		// Initialize stage
+		FXHelper.loadStage(primaryStage, register, title, 500, 500);
+
+		// Add event for response
 	}
 
 	@SuppressWarnings("exports")

@@ -62,7 +62,7 @@ public class VendorUser extends Application {
 		// Adding all the necessary elements to the main content area
 		vbPaneMain.getChildren().addAll(lborderTitle, lborderMenu, totalMenu, lborderItem, totalItem, lborderOrder,
 				totalOrder);
-		
+
 		// Setting the maximum width for the text fields and disable editing
 		totalMenu.setDisable(true);
 		totalItem.setDisable(true);
@@ -86,29 +86,34 @@ public class VendorUser extends Application {
 		// Initialize stage
 		FXHelper.loadStage(primaryStage, register, title, 500, 500);
 	}
-	
+
+	/**
+	 * @param orderCount
+	 * @return
+	 */
+
 	@SuppressWarnings("exports")
 	public void UpdateCredential(Stage primayStage) {
-		
+
 	}
 
 	@SuppressWarnings("exports")
 	public void CreateMenu(Stage primayStage) {
-		
+
 	}
 
 	@SuppressWarnings("exports")
 	public void AddItem(Stage primayStage) {
-		
+
 	}
 
 	@SuppressWarnings("exports")
 	public void EditItem(Stage primayStage) {
-		
+
 	}
 
 	@SuppressWarnings("exports")
 	public void DeleteItem(Stage primayStage) {
-		
+
 	}
 }

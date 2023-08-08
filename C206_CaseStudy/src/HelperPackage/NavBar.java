@@ -229,8 +229,8 @@ public class NavBar {
 		btLogOut.setMaxWidth(MAXWIDTH);
 
 		// Adding Button, Separator and Spacer to ToolBar
-		toolbar.getItems().addAll(LOGO, new Separator(), btOverview, btUpdate, btMenu, btAdd, btEdit, btDelete, bottomSpacer,
-				new Separator(), btLogOut);
+		toolbar.getItems().addAll(LOGO, new Separator(), btOverview, btUpdate, btMenu, btAdd, btEdit, btDelete,
+				bottomSpacer, new Separator(), btLogOut);
 
 		// Set ToolBar orientation to vertical
 		toolbar.setOrientation(Orientation.VERTICAL);
@@ -241,11 +241,11 @@ public class NavBar {
 		//
 		EventHandler<ActionEvent> handleOverview = (ActionEvent e) -> {
 			//
-				(new VendorUser()).start(new Stage());
-				primaryStage.close();
+			(new VendorUser()).start(new Stage());
+			primaryStage.close();
 		};
 		btOverview.setOnAction(handleOverview);
-		
+
 		//
 		EventHandler<ActionEvent> handleUpdate = (ActionEvent e) -> {
 			//
@@ -258,7 +258,7 @@ public class NavBar {
 			}
 		};
 		btUpdate.setOnAction(handleUpdate);
-		
+
 		//
 		EventHandler<ActionEvent> handleMenu = (ActionEvent e) -> {
 			//
@@ -271,7 +271,7 @@ public class NavBar {
 			}
 		};
 		btMenu.setOnAction(handleMenu);
-		
+
 		//
 		EventHandler<ActionEvent> handleAdd = (ActionEvent e) -> {
 			//
@@ -284,7 +284,7 @@ public class NavBar {
 			}
 		};
 		btAdd.setOnAction(handleAdd);
-		
+
 		//
 		EventHandler<ActionEvent> handleEdit = (ActionEvent e) -> {
 			//
@@ -297,7 +297,7 @@ public class NavBar {
 			}
 		};
 		btEdit.setOnAction(handleEdit);
-		
+
 		//
 		EventHandler<ActionEvent> handleDelete = (ActionEvent e) -> {
 			//
@@ -310,7 +310,7 @@ public class NavBar {
 			}
 		};
 		btDelete.setOnAction(handleDelete);
-		
+
 		return hbox;
 	}
 
@@ -361,7 +361,7 @@ public class NavBar {
 			primaryStage.close();
 		};
 		btOverview.setOnAction(handleOverview);
-		
+
 		// Add event for Login button
 		EventHandler<ActionEvent> handleViewOrder = (ActionEvent e) -> {
 			// Try open login window else mainpage
@@ -374,7 +374,7 @@ public class NavBar {
 			}
 		};
 		btViewOrder.setOnAction(handleViewOrder);
-		
+
 		// Add event for Login button
 		EventHandler<ActionEvent> handleEditUser = (ActionEvent e) -> {
 			// Try open login window else mainpage
@@ -414,7 +414,7 @@ public class NavBar {
 			}
 		};
 		btReport.setOnAction(handleReport);
-		
+
 		return hbox;
 	}
 

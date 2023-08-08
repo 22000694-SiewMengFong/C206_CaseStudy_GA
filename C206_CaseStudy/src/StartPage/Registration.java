@@ -30,10 +30,10 @@ import HelperPackage.NavBar;
 public class Registration {
 
 	// Create Box by Entire screen, Main screen, button area
-	private BorderPane bpPane = new BorderPane();
-	// private GridPane gpPane = new GridPane();
-
-	// private HBox vbPaneEntire = new HBox();
+	private BorderPane bpPane  = new BorderPane();
+	//private GridPane gpPane = new GridPane();
+	
+	//private HBox vbPaneEntire = new HBox();
 	private VBox vbPaneMain = new VBox();
 	private VBox vbPaneNormal = new VBox();
 
@@ -70,7 +70,7 @@ public class Registration {
 
 	private CheckBox cb1 = new CheckBox("Vegan");
 	private CheckBox cb2 = new CheckBox("Non Vegan");
-	private CheckBox cb3 = new CheckBox("Halal");
+	private CheckBox cb3 = new CheckBox("Liquid Only");
 
 	// Create button to be clicked by user upon filling all textfield
 	private Button btCreate = new Button("Create Account");
@@ -101,28 +101,30 @@ public class Registration {
 
 		hbAllergies.getChildren().addAll(cb1, cb2, cb3);
 		hbAllergies.setSpacing(10);
-		hbAllergies.setPadding(new Insets(10, 10, 10, 10));
+		hbAllergies.setPadding(new Insets(10,10,10,10));
 		hbAllergies.setAlignment(Pos.CENTER);
-
-		// Adding all the necessary elementsto the main content area
+		
+		// Adding all the necessary elements to the main content area
 		vbPaneNormal.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPhoneNumber,
 				tfPhoneNumber, lbAllegies, hbAllergies, lbAddress, tfAddress, lbPassword1, tfPassword1, lbPassword2,
-				tfPassword2, btCreate, hbPane, lbRepsonse);
-
+				tfPassword2, lbCompanyName, tfCompanyName, btCreate, hbPane, lbRepsonse);
+		
 		vbPaneNormal.setAlignment(Pos.CENTER);
 		vbPaneNormal.setSpacing(3);
-		vbPaneNormal.setPadding(new Insets(10, 10, 10, 10));
+		vbPaneNormal.setPadding(new Insets(10,10,10,10));
 
 		// Setting the maximum width for the text fields
 		tfName.setMaxWidth(MaxWidthTF);
 		tfEmail.setMaxWidth(MaxWidthTF);
 		tfAddress.setMaxWidth(MaxWidthTF);
 		tfPhoneNumber.setMaxWidth(MaxWidthTF);
+		tfCompanyName.setMaxWidth(MaxWidthTF);
 		tfPassword1.setMaxWidth(MaxWidthTF);
 		tfPassword2.setMaxWidth(MaxWidthTF);
 
 		// Adding the main content area and navigation bar to the entire horizontal box
-
+		//vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), gpPane);
+		
 		bpPane.setLeft(NavBar.navBarStart(primaryStage));
 		bpPane.setCenter(vbPaneNormal);
 
@@ -142,9 +144,7 @@ public class Registration {
 				String email = tfEmail.getText();
 				String password = tfPassword1.getText();
 				String address = tfAddress.getText();
-				String allegies = (cb1.isSelected()?cb1.getText():"");
-				allegies += (cb2.isSelected()?(allegies.isEmpty()?"":"," + cb2.getText()):"");
-				allegies += (cb3.isSelected()?(allegies.isEmpty()?"":"," + cb3.getText()):"");
+				String allegies = tfAllegies.getText();
 				String phoneNumber = tfPhoneNumber.getText();
 
 				String[] otherInfo = { phoneNumber, allegies, address };
@@ -183,15 +183,15 @@ public class Registration {
 
 		hbAllergies.getChildren().addAll(cb1, cb2, cb3);
 		hbAllergies.setSpacing(10);
-		hbAllergies.setPadding(new Insets(10, 10, 10, 10));
+		hbAllergies.setPadding(new Insets(10,10,10,10));
 		hbAllergies.setAlignment(Pos.CENTER);
-
+		
 		// Adding all the necessary elements to the main content area
 		vbPaneNormal.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPhoneNumber,
 				tfPhoneNumber, lbAllegies, hbAllergies, lbAddress, tfAddress, lbPassword1, tfPassword1, lbPassword2,
 				tfPassword2, lbCompanyName, tfCompanyName, btCreate, hbPane, lbRepsonse);
-
-		vbPaneNormal.setPadding(new Insets(10, 10, 10, 10));
+		
+		vbPaneNormal.setPadding(new Insets(10,10,10,10));
 
 		// Setting the maximum width for the text fields
 		tfName.setMaxWidth(MaxWidthTF);
@@ -203,14 +203,16 @@ public class Registration {
 		tfPassword2.setMaxWidth(MaxWidthTF);
 
 		// Adding the main content area and navigation bar to the entire horizontal box
-		// vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), gpPane);
-
+		//vbPaneEntire.getChildren().addAll(NavBar.navBarStart(primaryStage), gpPane);
+		
 		bpPane.setLeft(NavBar.navBarStart(primaryStage));
 		bpPane.setCenter(vbPaneNormal);
+
 		Scene register = new Scene(bpPane);
 
 		// Initialize stage
 		FXHelper.loadStage(primaryStage, register, title, 500, 700);
+
 
 		// Add event for response
 		EventHandler<ActionEvent> handleResponse = (ActionEvent e) -> {

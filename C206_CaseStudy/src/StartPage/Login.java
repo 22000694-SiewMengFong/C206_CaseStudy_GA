@@ -36,8 +36,8 @@ public class Login extends Application {
 	private static Label lbRepsonse = new Label("");
 
 	// Create textfield to store user input data
-	private static TextField tfEmail = new TextField("normal1@normal1");
-	private static TextField tfPassword = new TextField("normal1");
+	private static TextField tfEmail = new TextField("admin1@admin1");
+	private static TextField tfPassword = new TextField("admin1");
 
 	// Create button for user to click to login
 	private Button btLogin = new Button("Login");

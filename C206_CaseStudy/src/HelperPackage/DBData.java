@@ -2,6 +2,7 @@ package HelperPackage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class DBData {
 
@@ -85,40 +86,6 @@ public class DBData {
 		return user_email;
 	}
 
-	public String getMenuCount() {
-		String count = Integer.toString(getMenuCountSQL());
-		return count;
-	}
-
-	public String getNormalCount() {
-		String count = Integer.toString(getNormalCountSQL());
-		return count;
-	}
-
-	public String getVendorCount() {
-		String count = Integer.toString(getVendorCountSQL());
-		return count;
-	}
-
-	public String getUserCount() {
-		String count = Integer.toString(getUserCountSQL());
-		return count;
-	}
-
-	public String getItemCount() {
-		String count = Integer.toString(getItemCountSQL());
-		return count;
-	}
-
-	public String getOrderCount() {
-		String count = Integer.toString(getOrderCountSQL());
-		return count;
-	}
-
-	public String getAllOrderDetail() {
-		String data = getAllOrderDetailSQL();
-		return data;
-	}
 	// ===============================
 	// Find and Add Account in DB
 	// (DONE - NEED CHECKING)
@@ -163,19 +130,15 @@ public class DBData {
 						data[4] = rsAdmin.getString("admin_profile");
 						break;
 					}
-				default:
-					return data = null;
+					// update last login
+					String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
+					int rowsAffected = DBUtil.execSQL(updateSQL);
+					// Set data null if update of Last Login fails
+					if (rowsAffected != 1) {
+						data = null;
+					}
+					break;
 				}
-				
-				// update last login
-				String updateSQL = "UPDATE user SET LAST_LOGIN = NOW() WHERE user_id='" + data[0] + "'";
-				int rowsAffected = DBUtil.execSQL(updateSQL);
-				
-				// Set data null if update of Last Login fails
-				if (rowsAffected != 1) {
-					data = null;
-				}
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -203,8 +166,9 @@ public class DBData {
 		email = SQLInjection(email);
 		name = SQLInjection(name);
 		password = SQLInjection(password);
+
 		// Create and format SQL insert Statement
-		String insert = "INSERT INTO user(user_name, user_email, user_password, ACCESS_TYPE, LAST_LOGIN) VALUES ('"
+		String insert = "INSERT INTO user(user_name, user_email, user_password, user_access, LAST_LOGIN) VALUES ('"
 				+ name + "' , SHA1('" + email + "'), SHA1('" + password + "'), '" + access + "', NOW())";
 
 		int rowsAffectedUser = DBUtil.execSQL(insert);
@@ -212,18 +176,6 @@ public class DBData {
 		if (rowsAffectedUser != 1) {
 			DBUtil.close();
 			return check;
-		}
-
-		// Getting UserId
-		String select = "SELECT user_id FROM user WHERE user_email = SHA1('" + email + "');";
-		ResultSet rs = DBUtil.getTable(select);
-		try {
-			while (rs.next()) {
-				user_id = rs.getString("user_id");
-			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 
 		FindAccount(email, password);
@@ -252,7 +204,7 @@ public class DBData {
 			address = SQLInjection(address);
 
 			individualTable = "INSERT INTO normal (normal_id, normal_phoneNumber, normal_address, normal_profile, normal_allegies) VALUES ('"
-					+ user_id + "' ," + phoneNo + ", '" + address + "',  'user.png' , '" + allegies + "');";
+					+ user_id + "' ," + phoneNo + ", '" + address + "', " + picture + ", '" + allegies + "');";
 
 			rowsAffected = DBUtil.execSQL(individualTable);
 
@@ -357,7 +309,7 @@ public class DBData {
 		return check;
 	} // End of CheckEmailDB
 
-	private static int getMenuCountSQL() {
+	public static String getMenuCount() {
 		int count = 0;
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 		String select = "SELECT DISTINCT menu_id FROM menu_item;";
@@ -370,10 +322,12 @@ public class DBData {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		DBUtil.close();
+		String no = Integer.toString(count);
+		return no;
 	}
 
-	private static int getNormalCountSQL() {
+	public static String getNormalCount() {
 		int count = 0;
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 		String select = "SELECT DISTINCT normal_id FROM normal;";
@@ -386,10 +340,12 @@ public class DBData {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		DBUtil.close();
+		String no = Integer.toString(count);
+		return no;
 	}
 
-	private static int getUserCountSQL() {
+	public static String getUserCount() {
 		int count = 0;
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 		String select = "SELECT DISTINCT user_id FROM user;";
@@ -402,10 +358,12 @@ public class DBData {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		DBUtil.close();
+		String no = Integer.toString(count);
+		return no;
 	}
 
-	private static int getVendorCountSQL() {
+	public static String getVendorCount() {
 		int count = 0;
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 		String select = "SELECT DISTINCT vendor_id FROM vendor;";
@@ -418,10 +376,12 @@ public class DBData {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		DBUtil.close();
+		String no = Integer.toString(count);
+		return no;
 	}
 
-	private static int getItemCountSQL() {
+	public static String getItemCount() {
 		// todo
 		int count = 0;
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
@@ -435,10 +395,12 @@ public class DBData {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		DBUtil.close();
+		String no = Integer.toString(count);
+		return no;
 	}
 
-	private static int getOrderCountSQL() {
+	public static String getOrderCount() {
 		int count = 0;
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
 		String select = "SELECT DISTINCT order_id FROM has_order;";
@@ -451,38 +413,159 @@ public class DBData {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return count;
+		DBUtil.close();
+		String no = Integer.toString(count);
+		return no;
 	}
 
-	private static String getAllOrderDetailSQL() {
+	public static String[][] getAllOrderDetail() {
 		DBUtil.init(jdbcURL, dbUsername, dbPassword);
-		String select = "SELECT DISTINCT * FROM has_order;";
 
+		// SQL statement to retrieve details
+		String select = "SELECT DISTINCT * FROM has_order;";
 		ResultSet rs = DBUtil.getTable(select);
-		String output = String.format("%-10s %10s %-10s %10s %-10 %10", "USER ID", "USER NAME", "ORDER ID",
-				"ORDER STATUS", "PREFERENCE", "MENU ID");
+
+		// Initialise & assign values to header and data for table
+		String[] header = { "UID", "NAME", "ORDER ID", "STATUS", "PREFERENCE", "MENU ID" };
+		int orderCount = Integer.parseInt(getOrderCount());
+		String[][] data = new String[orderCount + 1][header.length];
+
+		// Set first index of data to header
+		data[0] = header;
+		int i = 0;
 		try {
 			while (rs.next()) {
-				String[] order = {};
+				String[] details = new String[6];
 
-				order[0] = rs.getString("order_id");
-				order[1] = rs.getString("order_status");
-				order[2] = rs.getString("preference");
-				order[3] = rs.getString("normal_id");
-				order[4] = rs.getString("menu_id");
+				details[0] = rs.getString("order_id");
+				details[1] = rs.getString("order_status");
+				details[2] = rs.getString("preference");
+				details[3] = rs.getString("normal_id");
+				details[4] = rs.getString("menu_id");
 
-				select = "SELECT user_name FROM user WHERE user_id = '" + order[4] + "';";
-				ResultSet rs1 = DBUtil.getTable(select);
-				while (rs.next()) {
-					order[5] = rs1.getString("user_name");
-					output += String.format("\n%-10s %10s %-10s %10s %-10 %10", order[0], order[1], order[2], order[3],
-							order[4], order[5]);
+				// Retrieve User Name
+				String select2 = "SELECT user_name, user_id FROM user WHERE user_id = '" + details[3] + "'";
+				ResultSet rs2 = DBUtil.getTable(select2);
+
+				while (rs2.next()) {
+					details[5] = rs2.getString("user_name");
+
+					// Assign values based on header info
+					if (data[i + 1][0] != details[3] || data[i][0] != details[3]) {
+						data[i + 1][0] = details[3];
+						data[i + 1][1] = details[5];
+						data[i + 1][2] = details[0];
+						data[i + 1][3] = details[1];
+						data[i + 1][4] = details[2];
+						data[i + 1][5] = details[4];
+						i++;
+					}
 				}
+
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return output;
+		DBUtil.close();
+		return data;
+	}
 
+	public static String[][] getAllItem() {
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT * FROM item;";
+
+		ResultSet rs = DBUtil.getTable(select);
+
+		int itemCount = Integer.parseInt(getItemCount());
+		String[][] AllItem = new String[itemCount][6];
+
+		try {
+			int count = 0;
+			while (rs.next()) {
+				// String[] item = {};
+				ArrayList<String> item = new ArrayList<String>();
+
+				item.add(toTitleCase(rs.getString("item_name").strip()));
+				item.add(Integer.toString(rs.getInt("item_qty")).strip());
+				item.add(toTitleCase(rs.getString("item_description").strip()));
+				item.add(toTitleCase((rs.getString("item_dietary").strip())));
+				item.add(toTitleCase(rs.getString("item_ingredients").strip()));
+				item.add(String.format("%.2f", rs.getDouble("item_price")));
+
+				AllItem[count] = item.toArray(new String[0]);
+				count++;
+			}
+		} catch (SQLException e) {
+			AllItem = null;
+			e.printStackTrace();
+		}
+
+		DBUtil.close();
+		return AllItem;
+	}
+
+	public static String[] getAllAllegies() {
+		DBUtil.init(jdbcURL, dbUsername, dbPassword);
+		String select = "SELECT * FROM item;";
+
+		ResultSet rs = DBUtil.getTable(select);
+		int ItemCount = Integer.parseInt(getItemCount());
+
+		// Check if there is Item in DB
+		if (ItemCount == 0) {
+			return null;
+		}
+
+		String[] AllegiesList = {};
+
+		try {
+			String AllAllegies = "";
+			while (rs.next()) {
+				AllAllegies += rs.getString("item_dietary").strip() + ",";
+			}
+			// System.out.println(AllAllegies+" ");
+			AllegiesList = AllAllegies.split(",");
+
+			// Remove white spacing
+			for (int i = 0; i < AllegiesList.length; i++) {
+				AllegiesList[i] = AllegiesList[i].strip().toLowerCase();
+			}
+
+			// Remove duplicate
+			ArrayList<String> Unique = new ArrayList<String>();
+
+			for (String Allegies : AllegiesList) {
+				boolean found = false;
+
+				for (String u : Unique) {
+					if (Allegies.equalsIgnoreCase(u) == true) {
+						found = true;
+						break;
+					}
+				}
+
+				if (found == false) {
+					Unique.add(toTitleCase(Allegies));
+				}
+			}
+			AllegiesList = Unique.toArray(new String[0]);
+
+		} catch (SQLException e) {
+			AllegiesList = null;
+			e.printStackTrace();
+		}
+
+		DBUtil.close();
+		return AllegiesList;
+	}
+
+	private static String toTitleCase(String givenString) {
+		String[] arr = givenString.split(" ");
+		StringBuffer sb = new StringBuffer();
+
+		for (int i = 0; i < arr.length; i++) {
+			sb.append(Character.toUpperCase(arr[i].charAt(0))).append(arr[i].substring(1)).append(" ");
+		}
+		return sb.toString().trim();
 	}
 }

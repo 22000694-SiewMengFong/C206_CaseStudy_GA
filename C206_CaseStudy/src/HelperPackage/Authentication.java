@@ -35,6 +35,7 @@ public class Authentication {
 	 * @return
 	 */
 	public static DBData CreateAccountNormal(String name, String email, String password, String[] otherInfo) {
+
 		String access = "normal";
 
 		// Create normal account

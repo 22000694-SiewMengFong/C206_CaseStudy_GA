@@ -8,11 +8,14 @@ import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToolBar;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.BorderPane;
@@ -50,15 +53,16 @@ public class NormalUser extends Application {
 	private Button btCreate = new Button("Create Account");
 
 	// Basic setting of the class
-	private String title = "Parent Window";
+	private String title = "Registration Window";
 	private String stylebt = "-fx-background-color: blue; -fx-text-fill: white;";
 	private String stylelb = "-fx-font: 20 arial;";
 	private int MaxWidthTF = 200;
-
+	private static final int MAXWIDTH = 150;
+	
 	public static void main(String[] args) {
 		launch(args);
 	} // End of main
-	
+
 	public void startCredential(DBData Credential) {
 		credential = Credential;
 		start(new Stage());
@@ -73,31 +77,28 @@ public class NormalUser extends Application {
 			return;
 		}
 
-		// Setting up the horizontal box for button area
-		hbPane.setSpacing(10);
-		hbPane.setAlignment(Pos.CENTER);
+		// Creating Filter Bar
+		HBox hbFilter = new HBox();
+		
+		String[] AllegiesArray = DBData.getAllAllegies();
+		int AllegiesNumber = AllegiesArray.length;
+		ToolBar toolbarFilter = new ToolBar();
+		
+		for (int i = 0; i < AllegiesNumber; i++) {
+			Button btFilter = new Button();
+			
+			btFilter.setText(AllegiesArray[i]);
+			btFilter.setMaxWidth(100);
+			toolbarFilter.getItems().add(btFilter);
+		}
 
-		// Styling the "Create Account" button
-		btCreate.setStyle(stylebt);
+		// Set ToolBar orientation to vertical
+		toolbarFilter.setOrientation(Orientation.HORIZONTAL);
 
-		// Styling the "Register an Account" label
-		lbRegister1.setStyle(stylelb);
-
-		// Setting up the vertical box for the main content area
-		vbPaneMain.setSpacing(10);
-		vbPaneMain.setPadding(new Insets(10, 10, 10, 10));
-		vbPaneMain.setAlignment(Pos.CENTER);
-
-		// Adding all the necessary elements to the main content area
-		vbPaneMain.getChildren().addAll(lbRegister1, lbRegister2, lbName, tfName, lbEmail, tfEmail, lbPassword1,
-				tfPassword1, lbPassword2, tfPassword2, btCreate, hbPane, lbRepsonse);
-
-		// Setting the maximum width for the text fields
-		tfName.setMaxWidth(MaxWidthTF);
-		tfEmail.setMaxWidth(MaxWidthTF);
-		tfPassword1.setMaxWidth(MaxWidthTF);
-		tfPassword2.setMaxWidth(MaxWidthTF);
-
+		hbFilter = new HBox(toolbarFilter);
+		
+		vbPaneMain.getChildren().addAll(hbFilter);
+		
 		// Adding the main content area and navigation bar to the entire horizontal box
 		bpPane.setLeft(NavBar.navBarHomeNormal(primaryStage));
 		bpPane.setCenter(vbPaneMain);
@@ -121,8 +122,51 @@ public class NormalUser extends Application {
 	}
 
 	@SuppressWarnings("exports")
-	public void Setting(Stage primaryStage) {
-
-	}
+	public void Setting(Stage primaryStage) { 
+		   
+		  // Declare necessary elements needed for this stage 
+		  ImageView profPic = new ImageView(String.format("file:UserProfiles/%s", credential.getUser_picture())); 
+		  Button changeProfPic = new Button("Change Profile Picture"); 
+		   
+		  lbName.setText("Name: "); 
+		  tfName.setText(credential.getUser_name()); 
+		  lbEmail.setText("Email: "); 
+		  tfEmail.setText(credential.getUser_email()); 
+		  Label lbContact = new Label("Contact: "); 
+		  TextField tfContact = new TextField(); // Retrieve Contacts thru credential.get 
+		  // TO DECLARE ALLERGIES WITH CHECKBOXES HERE LATER 
+		  Label lbAddress = new Label("Address: "); 
+		  TextField tfAddress = new TextField(); // Retrieve Address thru credential.get 
+		   
+		  Button updateParticulars = new Button("Update"); 
+		   
+		  // Setting MAXWIDTH for all TextFields 
+		  tfName.setMaxWidth(MAXWIDTH); 
+		  tfEmail.setMaxWidth(MAXWIDTH); 
+		  tfContact.setMaxWidth(MAXWIDTH); 
+		  tfAddress.setMaxWidth(MAXWIDTH); 
+		  tfPassword1.setMaxWidth(MAXWIDTH); 
+		  tfPassword2.setMaxWidth(MAXWIDTH); 
+		   
+		  // Inserting elements into vbPaneMain 
+		  vbPaneMain.getChildren().addAll(profPic, changeProfPic, lbName, tfName, lbEmail, tfEmail, lbContact, tfContact, 
+		    lbAddress, tfAddress, lbPassword1, 
+		    tfPassword1, lbPassword2, tfPassword2, updateParticulars, lbRepsonse); 
+		  vbPaneMain.setAlignment(Pos.CENTER); 
+		  vbPaneMain.setSpacing(6); 
+		  vbPaneMain.setPadding(new Insets(10,10,10,10)); 
+		   
+		  // Adding the main content area and navigation bar to the entire horizontal box 
+		  bpPane.setLeft(NavBar.navBarHomeNormal(primaryStage)); 
+		  bpPane.setCenter(vbPaneMain); 
+		 
+		  Scene settings = new Scene(bpPane); 
+		 
+		  // Initialize stage 
+		  FXHelper.loadStage(primaryStage, settings, title, 500, 600); 
+		 
+		  // Add event for response 
+		 
+		 }
 
 }
